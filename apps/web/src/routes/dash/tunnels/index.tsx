@@ -27,20 +27,20 @@ function TunnelsView() {
           <input
             type="text"
             placeholder="Search tunnels by name, description or key"
-            className="w-full bg-[#0F1115] border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+            className="w-full bg-black border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
           />
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 bg-[#0F1115] border border-white/10 rounded-lg text-sm text-gray-300 hover:text-white hover:border-white/20 transition-colors">
+          <button className="flex items-center gap-2 px-3 py-2 bg-black border border-white/10 rounded-lg text-sm text-gray-300 hover:text-white hover:border-white/20 transition-colors">
             <Filter size={16} />
             Filters
           </button>
-          <button className="flex items-center gap-2 px-3 py-2 bg-[#0F1115] border border-white/10 rounded-lg text-sm text-gray-300 hover:text-white hover:border-white/20 transition-colors">
+          <button className="flex items-center gap-2 px-3 py-2 bg-black border border-white/10 rounded-lg text-sm text-gray-300 hover:text-white hover:border-white/20 transition-colors">
             <ArrowUpDown size={16} />
             Sort
           </button>
           <div className="h-9 w-px bg-white/10 mx-1" />
-          <div className="flex bg-[#0F1115] border border-white/10 rounded-lg p-1">
+          <div className="flex bg-black border border-white/10 rounded-lg p-1">
             <button className="p-1.5 text-white bg-white/10 rounded-md">
               <List size={16} />
             </button>
@@ -55,7 +55,7 @@ function TunnelsView() {
         <Link
           to="/dash/tunnels/$tunnelId"
           params={{ tunnelId: "api-production" }}
-          className="block group bg-[#0F1115] border border-white/5 rounded-lg p-4 hover:border-white/10 transition-all"
+          className="block group bg-black border border-white/5 rounded-lg p-4 hover:border-white/10 transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -123,7 +123,7 @@ function TunnelsView() {
         <Link
           to="/dash/tunnels/$tunnelId"
           params={{ tunnelId: "local-dev-server" }}
-          className="block group bg-[#0F1115] border border-white/5 rounded-lg p-4 hover:border-white/10 transition-all"
+          className="block group bg-black border border-white/5 rounded-lg p-4 hover:border-white/10 transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
