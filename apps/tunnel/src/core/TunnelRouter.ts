@@ -24,6 +24,10 @@ export class TunnelRouter {
     return this.tunnels.get(tunnelId);
   }
 
+  hasTunnel(tunnelId: string): boolean {
+    return this.tunnels.has(tunnelId);
+  }
+
   handleMessage(tunnelId: string, message: Message): void {
     if (message.type === "response") {
       const pending = this.pendingRequests.get(message.requestId);
