@@ -61,7 +61,7 @@ async function main() {
   const args = process.argv.slice(2);
   const command = args[0];
   const serverUrl = process.env.OUTRAY_SERVER_URL || "wss://api.outray.dev/";
-  const webUrl = process.env.OUTRAY_WEB_URL || "http://localhost:3000";
+  const webUrl = process.env.OUTRAY_WEB_URL || "https://alpha.outray.dev";
 
   if (!command) {
     console.log(chalk.red("❌ Please specify a command"));
