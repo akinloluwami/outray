@@ -9,17 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashRouteImport } from './routes/dash'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashIndexRouteImport } from './routes/dash/index'
 import { Route as DashSettingsRouteImport } from './routes/dash/settings'
+import { Route as DashInstallRouteImport } from './routes/dash/install'
+import { Route as ApiAuthTokensRouteImport } from './routes/api/auth-tokens'
 import { Route as DashTunnelsIndexRouteImport } from './routes/dash/tunnels/index'
 import { Route as DashTunnelsTunnelIdRouteImport } from './routes/dash/tunnels/$tunnelId'
 import { Route as ApiTunnelCheckSubdomainRouteImport } from './routes/api/tunnel/check-subdomain'
 import { Route as ApiTunnelAuthRouteImport } from './routes/api/tunnel/auth'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -44,6 +52,16 @@ const DashSettingsRoute = DashSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => DashRoute,
+} as any)
+const DashInstallRoute = DashInstallRouteImport.update({
+  id: '/install',
+  path: '/install',
+  getParentRoute: () => DashRoute,
+} as any)
+const ApiAuthTokensRoute = ApiAuthTokensRouteImport.update({
+  id: '/api/auth-tokens',
+  path: '/api/auth-tokens',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DashTunnelsIndexRoute = DashTunnelsIndexRouteImport.update({
   id: '/tunnels/',
@@ -75,6 +93,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dash': typeof DashRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/api/auth-tokens': typeof ApiAuthTokensRoute
+  '/dash/install': typeof DashInstallRoute
   '/dash/settings': typeof DashSettingsRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -86,6 +107,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/api/auth-tokens': typeof ApiAuthTokensRoute
+  '/dash/install': typeof DashInstallRoute
   '/dash/settings': typeof DashSettingsRoute
   '/dash': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -99,6 +123,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dash': typeof DashRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/api/auth-tokens': typeof ApiAuthTokensRoute
+  '/dash/install': typeof DashInstallRoute
   '/dash/settings': typeof DashSettingsRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -113,6 +140,9 @@ export interface FileRouteTypes {
     | '/'
     | '/dash'
     | '/login'
+    | '/onboarding'
+    | '/api/auth-tokens'
+    | '/dash/install'
     | '/dash/settings'
     | '/dash/'
     | '/api/auth/$'
@@ -124,6 +154,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/onboarding'
+    | '/api/auth-tokens'
+    | '/dash/install'
     | '/dash/settings'
     | '/dash'
     | '/api/auth/$'
@@ -136,6 +169,9 @@ export interface FileRouteTypes {
     | '/'
     | '/dash'
     | '/login'
+    | '/onboarding'
+    | '/api/auth-tokens'
+    | '/dash/install'
     | '/dash/settings'
     | '/dash/'
     | '/api/auth/$'
@@ -149,6 +185,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashRoute: typeof DashRouteWithChildren
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
+  ApiAuthTokensRoute: typeof ApiAuthTokensRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTunnelAuthRoute: typeof ApiTunnelAuthRoute
   ApiTunnelCheckSubdomainRoute: typeof ApiTunnelCheckSubdomainRoute
@@ -156,6 +194,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -190,6 +235,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/settings'
       preLoaderRoute: typeof DashSettingsRouteImport
       parentRoute: typeof DashRoute
+    }
+    '/dash/install': {
+      id: '/dash/install'
+      path: '/install'
+      fullPath: '/dash/install'
+      preLoaderRoute: typeof DashInstallRouteImport
+      parentRoute: typeof DashRoute
+    }
+    '/api/auth-tokens': {
+      id: '/api/auth-tokens'
+      path: '/api/auth-tokens'
+      fullPath: '/api/auth-tokens'
+      preLoaderRoute: typeof ApiAuthTokensRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/dash/tunnels/': {
       id: '/dash/tunnels/'
@@ -230,6 +289,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashRouteChildren {
+  DashInstallRoute: typeof DashInstallRoute
   DashSettingsRoute: typeof DashSettingsRoute
   DashIndexRoute: typeof DashIndexRoute
   DashTunnelsTunnelIdRoute: typeof DashTunnelsTunnelIdRoute
@@ -237,6 +297,7 @@ interface DashRouteChildren {
 }
 
 const DashRouteChildren: DashRouteChildren = {
+  DashInstallRoute: DashInstallRoute,
   DashSettingsRoute: DashSettingsRoute,
   DashIndexRoute: DashIndexRoute,
   DashTunnelsTunnelIdRoute: DashTunnelsTunnelIdRoute,
@@ -249,6 +310,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashRoute: DashRouteWithChildren,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
+  ApiAuthTokensRoute: ApiAuthTokensRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTunnelAuthRoute: ApiTunnelAuthRoute,
   ApiTunnelCheckSubdomainRoute: ApiTunnelCheckSubdomainRoute,
