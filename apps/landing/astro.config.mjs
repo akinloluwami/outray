@@ -10,7 +10,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     server: {
-      allowedHosts: ["dishonest-star.outray.dev", "outray.dev", ".outray.dev"],
+      allowedHosts: ["unreliable-vulture.outray.app", "outray.dev"],
     },
   },
 
