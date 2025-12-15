@@ -85,8 +85,6 @@ export class WSHandler {
       });
     } catch (error) {
       console.error("Failed to register tunnel in database:", error);
-      // Don't fail the tunnel if DB registration fails
-      // The tunnel is already live in Redis, so it should work
     }
   }
 
@@ -205,7 +203,6 @@ export class WSHandler {
               return;
             }
 
-            // Register tunnel in database if user is authenticated
             if (userId && organizationId) {
               await this.registerTunnelInDatabase(
                 tunnelId,
@@ -214,10 +211,15 @@ export class WSHandler {
               );
             }
 
+            const protocol =
+              config.baseDomain === "localhost.direct" ? "http" : "https";
+            const portSuffix =
+              config.baseDomain === "localhost.direct" ? `:${config.port}` : "";
+
             const response = Protocol.encode({
               type: "tunnel_opened",
               tunnelId,
-              url: `https://${tunnelId}.${config.baseDomain}`,
+              url: `${protocol}://${tunnelId}.${config.baseDomain}${portSuffix}`,
             });
 
             ws.send(response);
