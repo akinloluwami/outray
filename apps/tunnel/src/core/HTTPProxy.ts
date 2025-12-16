@@ -4,14 +4,21 @@ import path from "path";
 import { TunnelRouter } from "./TunnelRouter";
 import { extractSubdomain } from "../../../../shared/utils";
 import { logger } from "../lib/clickhouse";
+import { LogManager } from "./LogManager";
 
 export class HTTPProxy {
   private router: TunnelRouter;
   private baseDomain: string;
+  private logManager: LogManager;
 
-  constructor(router: TunnelRouter, baseDomain: string) {
+  constructor(
+    router: TunnelRouter,
+    baseDomain: string,
+    logManager: LogManager,
+  ) {
     this.router = router;
     this.baseDomain = baseDomain;
+    this.logManager = logManager;
   }
 
   async handleRequest(
@@ -65,7 +72,7 @@ export class HTTPProxy {
 
       const metadata = this.router.getTunnelMetadata(tunnelId);
       if (metadata?.organizationId) {
-        logger.log({
+        const event = {
           timestamp: Date.now(),
           tunnel_id: metadata.dbTunnelId || tunnelId,
           organization_id: metadata.organizationId,
@@ -78,7 +85,10 @@ export class HTTPProxy {
           bytes_out: responseSize,
           client_ip: this.getClientIp(req),
           user_agent: req.headers["user-agent"] || "",
-        });
+        };
+
+        logger.log(event);
+        this.logManager.addLog(event);
       }
     } catch (error) {
       if (error instanceof Error && error.message === "Tunnel disconnected") {
