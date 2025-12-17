@@ -27,6 +27,14 @@ export interface AuthToken {
   createdAt: Date;
 }
 
+export interface Subdomain {
+  id: string;
+  subdomain: string;
+  organizationId: string;
+  userId: string;
+  createdAt: Date;
+}
+
 interface CreateAuthTokenParams {
   name: string;
 }
@@ -68,7 +76,10 @@ async function apiCall<T = any>(
 
 export const appClient = {
   tunnels: {
-    list: async () => apiCall<{ tunnels: Tunnel[] }>("get", "/api/tunnels"),
+    list: async (organizationId: string) =>
+      apiCall<{ tunnels: Tunnel[] }>("get", "/api/tunnels", {
+        params: { organizationId },
+      }),
 
     get: async (tunnelId: string) =>
       apiCall<{ tunnel: Tunnel }>("get", `/api/tunnels/${tunnelId}`),
@@ -90,5 +101,20 @@ export const appClient = {
       apiCall<{ success: boolean }>("delete", "/api/auth-tokens", {
         data: params,
       }),
+  },
+
+  subdomains: {
+    list: async (organizationId: string) =>
+      apiCall<{ subdomains: Subdomain[] }>("get", "/api/subdomains", {
+        params: { organizationId },
+      }),
+
+    create: async (params: { subdomain: string; organizationId: string }) =>
+      apiCall<{ subdomain: Subdomain }>("post", "/api/subdomains", {
+        data: params,
+      }),
+
+    delete: async (id: string) =>
+      apiCall<{ success: boolean }>("delete", `/api/subdomains/${id}`),
   },
 };
