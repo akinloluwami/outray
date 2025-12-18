@@ -31,7 +31,6 @@ export const Route = createFileRoute("/api/stats/overview")({
         }
 
         try {
-          // Get total requests count
           const totalRequestsResult = await clickhouse.query({
             query: `
               SELECT count() as total
@@ -45,7 +44,6 @@ export const Route = createFileRoute("/api/stats/overview")({
             (await totalRequestsResult.json()) as Array<{ total: string }>;
           const totalRequests = parseInt(totalRequestsData[0]?.total || "0");
 
-          // Get requests from 24h ago for comparison
           const requestsYesterdayResult = await clickhouse.query({
             query: `
               SELECT count() as total
@@ -63,7 +61,6 @@ export const Route = createFileRoute("/api/stats/overview")({
             requestsYesterdayData[0]?.total || "1",
           );
 
-          // Get requests from last 24h
           const recentRequestsResult = await clickhouse.query({
             query: `
               SELECT count() as total
@@ -78,13 +75,11 @@ export const Route = createFileRoute("/api/stats/overview")({
             (await recentRequestsResult.json()) as Array<{ total: string }>;
           const recentRequests = parseInt(recentRequestsData[0]?.total || "0");
 
-          // Calculate percentage change
           const requestsChange =
             requestsYesterday > 0
               ? ((recentRequests - requestsYesterday) / requestsYesterday) * 100
               : 0;
 
-          // Get total data transfer
           const dataTransferResult = await clickhouse.query({
             query: `
               SELECT 
@@ -104,7 +99,6 @@ export const Route = createFileRoute("/api/stats/overview")({
           const totalBytesOut = Number(dataTransferData[0]?.total_out || 0);
           const totalBytes = totalBytesIn + totalBytesOut;
 
-          // Get data transfer from 24h ago for comparison
           const dataYesterdayResult = await clickhouse.query({
             query: `
               SELECT 
@@ -129,7 +123,6 @@ export const Route = createFileRoute("/api/stats/overview")({
           );
           const bytesYesterday = bytesYesterdayIn + bytesYesterdayOut;
 
-          // Get data transfer from last 24h
           const dataRecentResult = await clickhouse.query({
             query: `
               SELECT 
