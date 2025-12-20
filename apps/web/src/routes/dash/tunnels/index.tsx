@@ -12,7 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { appClient } from "../../../lib/app-client";
-import { authClient } from "../../../lib/auth-client";
+import { useAppStore } from "../../../lib/store";
 
 export const Route = createFileRoute("/dash/tunnels/")({
   component: TunnelsView,
@@ -24,18 +24,19 @@ function TunnelsView() {
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  const { data: activeOrg, isPending: orgLoading } = authClient.useActiveOrganization();
+  const { selectedOrganizationId } = useAppStore();
+  const activeOrgId = selectedOrganizationId;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["tunnels", activeOrg?.id],
+    queryKey: ["tunnels", activeOrgId],
     queryFn: () => {
-      if (!activeOrg?.id) throw new Error("No active organization");
-      return appClient.tunnels.list(activeOrg.id);
+      if (!activeOrgId) throw new Error("No active organization");
+      return appClient.tunnels.list(activeOrgId);
     },
-    enabled: !!activeOrg?.id,
+    enabled: !!activeOrgId,
   });
 
-  if (isLoading || orgLoading) {
+  if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="flex items-center justify-between gap-4 opacity-50 pointer-events-none">
