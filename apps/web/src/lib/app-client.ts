@@ -131,5 +131,27 @@ export const appClient = {
       }>("get", "/api/stats/overview", {
         params: { organizationId },
       }),
+
+    tunnel: async (tunnelId: string, range: string = "24h") =>
+      apiCall<{
+        stats: {
+          totalRequests: number;
+          avgDuration: number;
+          totalBandwidth: number;
+          errorRate: number;
+        };
+        chartData: Array<{ time: string; requests: number; duration: number }>;
+        requests: Array<{
+          id: string;
+          method: string;
+          path: string;
+          status: number;
+          duration: number;
+          time: string;
+          size: number;
+        }>;
+      }>("get", "/api/stats/tunnel", {
+        params: { tunnelId, range },
+      }),
   },
 };
