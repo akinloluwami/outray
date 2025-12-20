@@ -3,35 +3,35 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Globe, Plus, Trash2, X } from "lucide-react";
 import { appClient } from "../../lib/app-client";
-import { authClient } from "../../lib/auth-client";
+import { useAppStore } from "../../lib/store";
 
 export const Route = createFileRoute("/dash/subdomains")({
   component: SubdomainsView,
 });
 
 function SubdomainsView() {
-  const { data: activeOrg, isPending: orgLoading } =
-    authClient.useActiveOrganization();
+  const { selectedOrganizationId } = useAppStore();
+  const activeOrgId = selectedOrganizationId;
   const queryClient = useQueryClient();
   const [newSubdomain, setNewSubdomain] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["subdomains", activeOrg?.id],
+    queryKey: ["subdomains", activeOrgId],
     queryFn: () => {
-      if (!activeOrg?.id) throw new Error("No active organization");
-      return appClient.subdomains.list(activeOrg.id);
+      if (!activeOrgId) throw new Error("No active organization");
+      return appClient.subdomains.list(activeOrgId);
     },
-    enabled: !!activeOrg?.id,
+    enabled: !!activeOrgId,
   });
 
   const createMutation = useMutation({
     mutationFn: async (subdomain: string) => {
-      if (!activeOrg?.id) throw new Error("No active organization");
+      if (!activeOrgId) throw new Error("No active organization");
       return appClient.subdomains.create({
         subdomain,
-        organizationId: activeOrg.id,
+        organizationId: activeOrgId,
       });
     },
     onSuccess: (data) => {
@@ -65,7 +65,7 @@ function SubdomainsView() {
 
   const subdomains = data && "subdomains" in data ? data.subdomains : [];
 
-  if (isLoading || orgLoading) {
+  if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="flex items-center justify-between">
