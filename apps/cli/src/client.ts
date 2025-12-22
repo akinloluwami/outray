@@ -99,6 +99,18 @@ export class OutRayClient {
       } else if (message.type === "error") {
         if (message.code === "SUBDOMAIN_IN_USE") {
           if (this.assignedUrl) {
+            // If we're reconnecting and the subdomain is in use, it's likely our own
+            // zombie connection from the drop. Try to force takeover once.
+            if (!this.forceTakeover) {
+              console.log(
+                chalk.dim(
+                  "Subdomain in use during reconnection, attempting takeover...",
+                ),
+              );
+              this.forceTakeover = true;
+              return;
+            }
+
             // We had a successful connection before, but now subdomain is taken
             // This means we were taken over by another tunnel
             console.log(
