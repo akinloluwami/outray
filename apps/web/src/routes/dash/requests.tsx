@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, Filter, Download } from "lucide-react";
+import { Search, Filter, Download, Radio } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useAppStore } from "../../lib/store";
 
@@ -22,15 +22,58 @@ interface TunnelEvent {
   user_agent: string;
 }
 
+type TimeRange = "live" | "1h" | "24h" | "7d" | "30d";
+
 function RequestsView() {
   const [searchTerm, setSearchTerm] = useState("");
   const [requests, setRequests] = useState<TunnelEvent[]>([]);
+  const [timeRange, setTimeRange] = useState<TimeRange>("live");
+  const [isLoading, setIsLoading] = useState(false);
   const { selectedOrganizationId } = useAppStore();
   const activeOrgId = selectedOrganizationId;
   const wsRef = useRef<WebSocket | null>(null);
 
+  // Fetch historical requests from API
+  const fetchHistoricalRequests = async (range: TimeRange) => {
+    if (!activeOrgId || range === "live") return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/requests?organizationId=${activeOrgId}&range=${range}&limit=100`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setRequests(data.requests || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch historical requests:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle time range change
   useEffect(() => {
-    if (!activeOrgId) return;
+    if (timeRange === "live") {
+      // Clear historical data when switching to live
+      setRequests([]);
+    } else {
+      // Fetch historical data
+      void fetchHistoricalRequests(timeRange);
+    }
+  }, [timeRange, activeOrgId]);
+
+  // WebSocket connection for live mode
+  useEffect(() => {
+    if (!activeOrgId || timeRange !== "live") {
+      // Close WebSocket if not in live mode
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      return;
+    }
 
     const wsUrl = import.meta.env.VITE_TUNNEL_URL;
     const ws = new WebSocket(`${wsUrl}/dashboard/events?orgId=${activeOrgId}`);
@@ -52,7 +95,7 @@ function RequestsView() {
     return () => {
       ws.close();
     };
-  }, [activeOrgId]);
+  }, [activeOrgId, timeRange]);
 
   const filteredRequests = requests.filter(
     (req) =>
@@ -95,7 +138,7 @@ function RequestsView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="relative flex-1 max-w-md group">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-accent transition-colors"
@@ -109,6 +152,35 @@ function RequestsView() {
             className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:bg-white/10 transition-all"
           />
         </div>
+
+        <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
+          {[
+            { value: "live" as TimeRange, label: "Live", icon: Radio },
+            { value: "1h" as TimeRange, label: "1h" },
+            { value: "24h" as TimeRange, label: "24h" },
+            { value: "7d" as TimeRange, label: "7d" },
+            { value: "30d" as TimeRange, label: "30d" },
+          ].map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              onClick={() => setTimeRange(value)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                timeRange === value
+                  ? "bg-accent text-white shadow-sm"
+                  : "text-gray-400 hover:text-gray-300 hover:bg-white/5"
+              }`}
+            >
+              {Icon && (
+                <Icon
+                  size={14}
+                  className={timeRange === value ? "animate-pulse" : ""}
+                />
+              )}
+              {label}
+            </button>
+          ))}
+        </div>
+
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all">
             <Filter size={16} />
@@ -137,13 +209,27 @@ function RequestsView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {filteredRequests.length === 0 ? (
+              {isLoading ? (
                 <tr>
                   <td
                     colSpan={8}
                     className="px-4 py-8 text-center text-gray-500"
                   >
-                    Waiting for requests...
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                      Loading requests...
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredRequests.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
+                    {timeRange === "live"
+                      ? "Waiting for requests..."
+                      : "No requests found in this time range"}
                   </td>
                 </tr>
               ) : (
