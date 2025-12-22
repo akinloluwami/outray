@@ -69,13 +69,14 @@ app.get("/internal/domain-check", async (req, res) => {
 
     // 1. Check if it's a subdomain of outray.app
     if (domain.endsWith(".outray.app")) {
-      const subdomain = domain.replace(".outray.app", "");
+      // Construct the full URL to match what's stored in the database
+      const tunnelUrl = `https://${domain}`;
 
-      // Check if tunnel exists
+      // Check if tunnel exists by full URL
       const tunnel = await db
         .select()
         .from(tunnels)
-        .where(eq(tunnels.url, subdomain))
+        .where(eq(tunnels.url, tunnelUrl))
         .limit(1);
 
       if (tunnel.length > 0) {
