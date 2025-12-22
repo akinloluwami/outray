@@ -156,3 +156,88 @@ export const invitationsRelations = relations(invitations, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const cliLoginSessions = pgTable(
+  "cli_login_sessions",
+  {
+    id: text("id").primaryKey(),
+    code: text("code").notNull().unique(),
+    status: text("status").notNull().default("pending"), // pending, authenticated, expired
+    userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
+    userToken: text("user_token"),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("cli_login_sessions_code_idx").on(table.code),
+    index("cli_login_sessions_status_idx").on(table.status),
+  ],
+);
+
+export const cliUserTokens = pgTable(
+  "cli_user_tokens",
+  {
+    id: text("id").primaryKey(),
+    token: text("token").notNull().unique(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    lastUsedAt: timestamp("last_used_at"),
+  },
+  (table) => [
+    index("cli_user_tokens_token_idx").on(table.token),
+    index("cli_user_tokens_user_id_idx").on(table.userId),
+  ],
+);
+
+export const cliOrgTokens = pgTable(
+  "cli_org_tokens",
+  {
+    id: text("id").primaryKey(),
+    token: text("token").notNull().unique(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    lastUsedAt: timestamp("last_used_at"),
+  },
+  (table) => [
+    index("cli_org_tokens_token_idx").on(table.token),
+    index("cli_org_tokens_user_id_idx").on(table.userId),
+    index("cli_org_tokens_organization_id_idx").on(table.organizationId),
+  ],
+);
+
+export const cliLoginSessionsRelations = relations(
+  cliLoginSessions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [cliLoginSessions.userId],
+      references: [users.id],
+    }),
+  }),
+);
+
+export const cliUserTokensRelations = relations(cliUserTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [cliUserTokens.userId],
+    references: [users.id],
+  }),
+}));
+
+export const cliOrgTokensRelations = relations(cliOrgTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [cliOrgTokens.userId],
+    references: [users.id],
+  }),
+  organization: one(organizations, {
+    fields: [cliOrgTokens.organizationId],
+    references: [organizations.id],
+  }),
+}));
