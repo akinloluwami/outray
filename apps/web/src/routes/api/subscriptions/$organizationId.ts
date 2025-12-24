@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { db } from "../../../db";
-import {
-  subscriptions,
-  subscriptionUsage,
-} from "../../../db/subscription-schema";
-import { eq, and } from "drizzle-orm";
+import { subscriptions } from "../../../db/subscription-schema";
+import { eq } from "drizzle-orm";
 import { auth } from "../../../lib/auth";
 
 export const Route = createFileRoute("/api/subscriptions/$organizationId")({
@@ -34,23 +31,9 @@ export const Route = createFileRoute("/api/subscriptions/$organizationId")({
             .where(eq(subscriptions.organizationId, organizationId))
             .limit(1);
 
-          // Get current month usage
-          const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-          const [usage] = await db
-            .select()
-            .from(subscriptionUsage)
-            .where(
-              and(
-                eq(subscriptionUsage.organizationId, organizationId),
-                eq(subscriptionUsage.month, currentMonth),
-              ),
-            )
-            .limit(1);
-
           return new Response(
             JSON.stringify({
               subscription: subscription || null,
-              usage: usage || null,
             }),
             { status: 200, headers: { "Content-Type": "application/json" } },
           );
