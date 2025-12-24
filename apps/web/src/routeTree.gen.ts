@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashRouteImport } from './routes/dash'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashIndexRouteImport } from './routes/dash/index'
+import { Route as InvitationsAcceptRouteImport } from './routes/invitations.accept'
 import { Route as InternalDomainCheckRouteImport } from './routes/internal/domain-check'
 import { Route as DashSubdomainsRouteImport } from './routes/dash/subdomains'
 import { Route as DashSettingsRouteImport } from './routes/dash/settings'
@@ -72,6 +73,11 @@ const DashIndexRoute = DashIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashRoute,
+} as any)
+const InvitationsAcceptRoute = InvitationsAcceptRouteImport.update({
+  id: '/invitations/accept',
+  path: '/invitations/accept',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InternalDomainCheckRoute = InternalDomainCheckRouteImport.update({
   id: '/internal/domain-check',
@@ -260,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/dash/settings': typeof DashSettingsRoute
   '/dash/subdomains': typeof DashSubdomainsRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
+  '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/dash/settings': typeof DashSettingsRoute
   '/dash/subdomains': typeof DashSubdomainsRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
+  '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
@@ -340,6 +348,7 @@ export interface FileRoutesById {
   '/dash/settings': typeof DashSettingsRoute
   '/dash/subdomains': typeof DashSubdomainsRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
+  '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
@@ -382,6 +391,7 @@ export interface FileRouteTypes {
     | '/dash/settings'
     | '/dash/subdomains'
     | '/internal/domain-check'
+    | '/invitations/accept'
     | '/dash/'
     | '/api/auth/$'
     | '/api/cli/complete'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
     | '/dash/settings'
     | '/dash/subdomains'
     | '/internal/domain-check'
+    | '/invitations/accept'
     | '/dash'
     | '/api/auth/$'
     | '/api/cli/complete'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/dash/settings'
     | '/dash/subdomains'
     | '/internal/domain-check'
+    | '/invitations/accept'
     | '/dash/'
     | '/api/auth/$'
     | '/api/cli/complete'
@@ -494,6 +506,7 @@ export interface RootRouteChildren {
   ApiSubdomainsRoute: typeof ApiSubdomainsRouteWithChildren
   CliLoginRoute: typeof CliLoginRoute
   InternalDomainCheckRoute: typeof InternalDomainCheckRoute
+  InvitationsAcceptRoute: typeof InvitationsAcceptRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiCliCompleteRoute: typeof ApiCliCompleteRoute
   ApiCliExchangeRoute: typeof ApiCliExchangeRoute
@@ -547,6 +560,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/'
       preLoaderRoute: typeof DashIndexRouteImport
       parentRoute: typeof DashRoute
+    }
+    '/invitations/accept': {
+      id: '/invitations/accept'
+      path: '/invitations/accept'
+      fullPath: '/invitations/accept'
+      preLoaderRoute: typeof InvitationsAcceptRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/internal/domain-check': {
       id: '/internal/domain-check'
@@ -857,6 +877,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSubdomainsRoute: ApiSubdomainsRouteWithChildren,
   CliLoginRoute: CliLoginRoute,
   InternalDomainCheckRoute: InternalDomainCheckRoute,
+  InvitationsAcceptRoute: InvitationsAcceptRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiCliCompleteRoute: ApiCliCompleteRoute,
   ApiCliExchangeRoute: ApiCliExchangeRoute,
