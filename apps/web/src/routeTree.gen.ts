@@ -32,6 +32,7 @@ import { Route as DashTunnelsIndexRouteImport } from './routes/dash/tunnels/inde
 import { Route as ApiTunnelsIndexRouteImport } from './routes/api/tunnels/index'
 import { Route as ApiDomainsIndexRouteImport } from './routes/api/domains/index'
 import { Route as DashTunnelsTunnelIdRouteImport } from './routes/dash/tunnels/$tunnelId'
+import { Route as ApiWebhooksPolarRouteImport } from './routes/api/webhooks/polar'
 import { Route as ApiTunnelsTunnelIdRouteImport } from './routes/api/tunnels/$tunnelId'
 import { Route as ApiTunnelRegisterRouteImport } from './routes/api/tunnel/register'
 import { Route as ApiTunnelCheckSubdomainRouteImport } from './routes/api/tunnel/check-subdomain'
@@ -165,6 +166,11 @@ const DashTunnelsTunnelIdRoute = DashTunnelsTunnelIdRouteImport.update({
   path: '/tunnels/$tunnelId',
   getParentRoute: () => DashRoute,
 } as any)
+const ApiWebhooksPolarRoute = ApiWebhooksPolarRouteImport.update({
+  id: '/api/webhooks/polar',
+  path: '/api/webhooks/polar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiTunnelsTunnelIdRoute = ApiTunnelsTunnelIdRouteImport.update({
   id: '/api/tunnels/$tunnelId',
   path: '/api/tunnels/$tunnelId',
@@ -290,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/tunnels/$tunnelId': typeof ApiTunnelsTunnelIdRoute
+  '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
   '/dash/tunnels/$tunnelId': typeof DashTunnelsTunnelIdRoute
   '/api/domains': typeof ApiDomainsIndexRoute
   '/api/tunnels': typeof ApiTunnelsIndexRoute
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/tunnels/$tunnelId': typeof ApiTunnelsTunnelIdRoute
+  '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
   '/dash/tunnels/$tunnelId': typeof DashTunnelsTunnelIdRoute
   '/api/domains': typeof ApiDomainsIndexRoute
   '/api/tunnels': typeof ApiTunnelsIndexRoute
@@ -374,6 +382,7 @@ export interface FileRoutesById {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/tunnels/$tunnelId': typeof ApiTunnelsTunnelIdRoute
+  '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
   '/dash/tunnels/$tunnelId': typeof DashTunnelsTunnelIdRoute
   '/api/domains/': typeof ApiDomainsIndexRoute
   '/api/tunnels/': typeof ApiTunnelsIndexRoute
@@ -418,6 +427,7 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/tunnels/$tunnelId'
+    | '/api/webhooks/polar'
     | '/dash/tunnels/$tunnelId'
     | '/api/domains'
     | '/api/tunnels'
@@ -459,6 +469,7 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/tunnels/$tunnelId'
+    | '/api/webhooks/polar'
     | '/dash/tunnels/$tunnelId'
     | '/api/domains'
     | '/api/tunnels'
@@ -501,6 +512,7 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/tunnels/$tunnelId'
+    | '/api/webhooks/polar'
     | '/dash/tunnels/$tunnelId'
     | '/api/domains/'
     | '/api/tunnels/'
@@ -534,6 +546,7 @@ export interface RootRouteChildren {
   ApiTunnelCheckSubdomainRoute: typeof ApiTunnelCheckSubdomainRoute
   ApiTunnelRegisterRoute: typeof ApiTunnelRegisterRoute
   ApiTunnelsTunnelIdRoute: typeof ApiTunnelsTunnelIdRoute
+  ApiWebhooksPolarRoute: typeof ApiWebhooksPolarRoute
   ApiDomainsIndexRoute: typeof ApiDomainsIndexRoute
   ApiTunnelsIndexRoute: typeof ApiTunnelsIndexRoute
 }
@@ -700,6 +713,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/tunnels/$tunnelId'
       preLoaderRoute: typeof DashTunnelsTunnelIdRouteImport
       parentRoute: typeof DashRoute
+    }
+    '/api/webhooks/polar': {
+      id: '/api/webhooks/polar'
+      path: '/api/webhooks/polar'
+      fullPath: '/api/webhooks/polar'
+      preLoaderRoute: typeof ApiWebhooksPolarRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/tunnels/$tunnelId': {
       id: '/api/tunnels/$tunnelId'
@@ -913,6 +933,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTunnelCheckSubdomainRoute: ApiTunnelCheckSubdomainRoute,
   ApiTunnelRegisterRoute: ApiTunnelRegisterRoute,
   ApiTunnelsTunnelIdRoute: ApiTunnelsTunnelIdRoute,
+  ApiWebhooksPolarRoute: ApiWebhooksPolarRoute,
   ApiDomainsIndexRoute: ApiDomainsIndexRoute,
   ApiTunnelsIndexRoute: ApiTunnelsIndexRoute,
 }
