@@ -41,12 +41,14 @@ import { Route as ApiSubscriptionsOrganizationIdRouteImport } from './routes/api
 import { Route as ApiSubdomainsSubdomainIdRouteImport } from './routes/api/subdomains/$subdomainId'
 import { Route as ApiStatsTunnelRouteImport } from './routes/api/stats/tunnel'
 import { Route as ApiStatsOverviewRouteImport } from './routes/api/stats/overview'
+import { Route as ApiPortalPolarRouteImport } from './routes/api/portal/polar'
 import { Route as ApiMeOrgsRouteImport } from './routes/api/me/orgs'
 import { Route as ApiDomainsDomainIdRouteImport } from './routes/api/domains/$domainId'
 import { Route as ApiDomainVerifyOwnershipRouteImport } from './routes/api/domain/verify-ownership'
 import { Route as ApiCliLoginRouteImport } from './routes/api/cli/login'
 import { Route as ApiCliExchangeRouteImport } from './routes/api/cli/exchange'
 import { Route as ApiCliCompleteRouteImport } from './routes/api/cli/complete'
+import { Route as ApiCheckoutPolarRouteImport } from './routes/api/checkout/polar'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiDomainsDomainIdVerifyRouteImport } from './routes/api/domains/$domainId.verify'
 import { Route as ApiCliLoginStatusRouteImport } from './routes/api/cli/login/status'
@@ -213,6 +215,11 @@ const ApiStatsOverviewRoute = ApiStatsOverviewRouteImport.update({
   path: '/api/stats/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPortalPolarRoute = ApiPortalPolarRouteImport.update({
+  id: '/api/portal/polar',
+  path: '/api/portal/polar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMeOrgsRoute = ApiMeOrgsRouteImport.update({
   id: '/api/me/orgs',
   path: '/api/me/orgs',
@@ -242,6 +249,11 @@ const ApiCliExchangeRoute = ApiCliExchangeRouteImport.update({
 const ApiCliCompleteRoute = ApiCliCompleteRouteImport.update({
   id: '/api/cli/complete',
   path: '/api/cli/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckoutPolarRoute = ApiCheckoutPolarRouteImport.update({
+  id: '/api/checkout/polar',
+  path: '/api/checkout/polar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -282,12 +294,14 @@ export interface FileRoutesByFullPath {
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/checkout/polar': typeof ApiCheckoutPolarRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
   '/api/cli/exchange': typeof ApiCliExchangeRoute
   '/api/cli/login': typeof ApiCliLoginRouteWithChildren
   '/api/domain/verify-ownership': typeof ApiDomainVerifyOwnershipRoute
   '/api/domains/$domainId': typeof ApiDomainsDomainIdRouteWithChildren
   '/api/me/orgs': typeof ApiMeOrgsRoute
+  '/api/portal/polar': typeof ApiPortalPolarRoute
   '/api/stats/overview': typeof ApiStatsOverviewRoute
   '/api/stats/tunnel': typeof ApiStatsTunnelRoute
   '/api/subdomains/$subdomainId': typeof ApiSubdomainsSubdomainIdRoute
@@ -324,12 +338,14 @@ export interface FileRoutesByTo {
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/checkout/polar': typeof ApiCheckoutPolarRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
   '/api/cli/exchange': typeof ApiCliExchangeRoute
   '/api/cli/login': typeof ApiCliLoginRouteWithChildren
   '/api/domain/verify-ownership': typeof ApiDomainVerifyOwnershipRoute
   '/api/domains/$domainId': typeof ApiDomainsDomainIdRouteWithChildren
   '/api/me/orgs': typeof ApiMeOrgsRoute
+  '/api/portal/polar': typeof ApiPortalPolarRoute
   '/api/stats/overview': typeof ApiStatsOverviewRoute
   '/api/stats/tunnel': typeof ApiStatsTunnelRoute
   '/api/subdomains/$subdomainId': typeof ApiSubdomainsSubdomainIdRoute
@@ -368,12 +384,14 @@ export interface FileRoutesById {
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/checkout/polar': typeof ApiCheckoutPolarRoute
   '/api/cli/complete': typeof ApiCliCompleteRoute
   '/api/cli/exchange': typeof ApiCliExchangeRoute
   '/api/cli/login': typeof ApiCliLoginRouteWithChildren
   '/api/domain/verify-ownership': typeof ApiDomainVerifyOwnershipRoute
   '/api/domains/$domainId': typeof ApiDomainsDomainIdRouteWithChildren
   '/api/me/orgs': typeof ApiMeOrgsRoute
+  '/api/portal/polar': typeof ApiPortalPolarRoute
   '/api/stats/overview': typeof ApiStatsOverviewRoute
   '/api/stats/tunnel': typeof ApiStatsTunnelRoute
   '/api/subdomains/$subdomainId': typeof ApiSubdomainsSubdomainIdRoute
@@ -413,12 +431,14 @@ export interface FileRouteTypes {
     | '/invitations/accept'
     | '/dash/'
     | '/api/auth/$'
+    | '/api/checkout/polar'
     | '/api/cli/complete'
     | '/api/cli/exchange'
     | '/api/cli/login'
     | '/api/domain/verify-ownership'
     | '/api/domains/$domainId'
     | '/api/me/orgs'
+    | '/api/portal/polar'
     | '/api/stats/overview'
     | '/api/stats/tunnel'
     | '/api/subdomains/$subdomainId'
@@ -455,12 +475,14 @@ export interface FileRouteTypes {
     | '/invitations/accept'
     | '/dash'
     | '/api/auth/$'
+    | '/api/checkout/polar'
     | '/api/cli/complete'
     | '/api/cli/exchange'
     | '/api/cli/login'
     | '/api/domain/verify-ownership'
     | '/api/domains/$domainId'
     | '/api/me/orgs'
+    | '/api/portal/polar'
     | '/api/stats/overview'
     | '/api/stats/tunnel'
     | '/api/subdomains/$subdomainId'
@@ -498,12 +520,14 @@ export interface FileRouteTypes {
     | '/invitations/accept'
     | '/dash/'
     | '/api/auth/$'
+    | '/api/checkout/polar'
     | '/api/cli/complete'
     | '/api/cli/exchange'
     | '/api/cli/login'
     | '/api/domain/verify-ownership'
     | '/api/domains/$domainId'
     | '/api/me/orgs'
+    | '/api/portal/polar'
     | '/api/stats/overview'
     | '/api/stats/tunnel'
     | '/api/subdomains/$subdomainId'
@@ -533,12 +557,14 @@ export interface RootRouteChildren {
   InternalDomainCheckRoute: typeof InternalDomainCheckRoute
   InvitationsAcceptRoute: typeof InvitationsAcceptRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiCheckoutPolarRoute: typeof ApiCheckoutPolarRoute
   ApiCliCompleteRoute: typeof ApiCliCompleteRoute
   ApiCliExchangeRoute: typeof ApiCliExchangeRoute
   ApiCliLoginRoute: typeof ApiCliLoginRouteWithChildren
   ApiDomainVerifyOwnershipRoute: typeof ApiDomainVerifyOwnershipRoute
   ApiDomainsDomainIdRoute: typeof ApiDomainsDomainIdRouteWithChildren
   ApiMeOrgsRoute: typeof ApiMeOrgsRoute
+  ApiPortalPolarRoute: typeof ApiPortalPolarRoute
   ApiStatsOverviewRoute: typeof ApiStatsOverviewRoute
   ApiStatsTunnelRoute: typeof ApiStatsTunnelRoute
   ApiSubscriptionsOrganizationIdRoute: typeof ApiSubscriptionsOrganizationIdRoute
@@ -777,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStatsOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/portal/polar': {
+      id: '/api/portal/polar'
+      path: '/api/portal/polar'
+      fullPath: '/api/portal/polar'
+      preLoaderRoute: typeof ApiPortalPolarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/me/orgs': {
       id: '/api/me/orgs'
       path: '/api/me/orgs'
@@ -817,6 +850,13 @@ declare module '@tanstack/react-router' {
       path: '/api/cli/complete'
       fullPath: '/api/cli/complete'
       preLoaderRoute: typeof ApiCliCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/checkout/polar': {
+      id: '/api/checkout/polar'
+      path: '/api/checkout/polar'
+      fullPath: '/api/checkout/polar'
+      preLoaderRoute: typeof ApiCheckoutPolarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -920,12 +960,14 @@ const rootRouteChildren: RootRouteChildren = {
   InternalDomainCheckRoute: InternalDomainCheckRoute,
   InvitationsAcceptRoute: InvitationsAcceptRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiCheckoutPolarRoute: ApiCheckoutPolarRoute,
   ApiCliCompleteRoute: ApiCliCompleteRoute,
   ApiCliExchangeRoute: ApiCliExchangeRoute,
   ApiCliLoginRoute: ApiCliLoginRouteWithChildren,
   ApiDomainVerifyOwnershipRoute: ApiDomainVerifyOwnershipRoute,
   ApiDomainsDomainIdRoute: ApiDomainsDomainIdRouteWithChildren,
   ApiMeOrgsRoute: ApiMeOrgsRoute,
+  ApiPortalPolarRoute: ApiPortalPolarRoute,
   ApiStatsOverviewRoute: ApiStatsOverviewRoute,
   ApiStatsTunnelRoute: ApiStatsTunnelRoute,
   ApiSubscriptionsOrganizationIdRoute: ApiSubscriptionsOrganizationIdRoute,
