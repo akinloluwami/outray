@@ -83,7 +83,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
 
   const handleLogout = async () => {
     await authClient.signOut();
-    navigate({ to: "/login" });
+    navigate({ to: "/login", search: { redirect: undefined } });
   };
 
   const selectedOrg =
@@ -92,7 +92,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
 
   return (
     <div
-      className={`${isCollapsed ? "w-20" : "w-72"} flex flex-col transition-all duration-300 ease-in-out border-r border-white/5 bg-[#070707]`}
+      className={`${isCollapsed ? "w-20" : "w-56"} flex flex-col transition-all duration-300 ease-in-out border-r border-white/5 bg-[#070707]`}
     >
       <div
         className={`p-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}
