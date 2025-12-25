@@ -87,6 +87,7 @@ export const Route = createFileRoute("/api/tunnel/auth")({
             "free") as keyof typeof SUBSCRIPTION_PLANS;
           const bandwidthLimit =
             SUBSCRIPTION_PLANS[plan].features.bandwidthPerMonth;
+          const retentionDays = SUBSCRIPTION_PLANS[plan].features.retentionDays;
 
           return json({
             valid: true,
@@ -99,6 +100,7 @@ export const Route = createFileRoute("/api/tunnel/auth")({
             },
             tokenType,
             bandwidthLimit,
+            retentionDays,
           });
         } catch (error) {
           console.error("Error in /api/tunnel/auth:", error);
