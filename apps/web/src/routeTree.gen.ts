@@ -54,6 +54,7 @@ import { Route as ApiCliCompleteRouteImport } from './routes/api/cli/complete'
 import { Route as ApiCheckoutPolarRouteImport } from './routes/api/checkout/polar'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAdminStatsRouteImport } from './routes/api/admin/stats'
+import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiTunnelsTunnelIdStopRouteImport } from './routes/api/tunnels/$tunnelId.stop'
 import { Route as ApiDomainsDomainIdVerifyRouteImport } from './routes/api/domains/$domainId.verify'
 import { Route as ApiCliLoginStatusRouteImport } from './routes/api/cli/login/status'
@@ -287,6 +288,11 @@ const ApiAdminStatsRoute = ApiAdminStatsRouteImport.update({
   path: '/api/admin/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiTunnelsTunnelIdStopRoute = ApiTunnelsTunnelIdStopRouteImport.update({
   id: '/stop',
   path: '/stop',
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/checkout/polar': typeof ApiCheckoutPolarRoute
@@ -374,6 +381,7 @@ export interface FileRoutesByTo {
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash': typeof DashIndexRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/checkout/polar': typeof ApiCheckoutPolarRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
   '/dash/': typeof DashIndexRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/stats': typeof ApiAdminStatsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/checkout/polar': typeof ApiCheckoutPolarRoute
@@ -477,6 +486,7 @@ export interface FileRouteTypes {
     | '/internal/domain-check'
     | '/invitations/accept'
     | '/dash/'
+    | '/api/admin/login'
     | '/api/admin/stats'
     | '/api/auth/$'
     | '/api/checkout/polar'
@@ -526,6 +536,7 @@ export interface FileRouteTypes {
     | '/internal/domain-check'
     | '/invitations/accept'
     | '/dash'
+    | '/api/admin/login'
     | '/api/admin/stats'
     | '/api/auth/$'
     | '/api/checkout/polar'
@@ -576,6 +587,7 @@ export interface FileRouteTypes {
     | '/internal/domain-check'
     | '/invitations/accept'
     | '/dash/'
+    | '/api/admin/login'
     | '/api/admin/stats'
     | '/api/auth/$'
     | '/api/checkout/polar'
@@ -618,6 +630,7 @@ export interface RootRouteChildren {
   CliLoginRoute: typeof CliLoginRoute
   InternalDomainCheckRoute: typeof InternalDomainCheckRoute
   InvitationsAcceptRoute: typeof InvitationsAcceptRoute
+  ApiAdminLoginRoute: typeof ApiAdminLoginRoute
   ApiAdminStatsRoute: typeof ApiAdminStatsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiCheckoutPolarRoute: typeof ApiCheckoutPolarRoute
@@ -959,6 +972,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminStatsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/login': {
+      id: '/api/admin/login'
+      path: '/api/admin/login'
+      fullPath: '/api/admin/login'
+      preLoaderRoute: typeof ApiAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/tunnels/$tunnelId/stop': {
       id: '/api/tunnels/$tunnelId/stop'
       path: '/stop'
@@ -1071,6 +1091,7 @@ const rootRouteChildren: RootRouteChildren = {
   CliLoginRoute: CliLoginRoute,
   InternalDomainCheckRoute: InternalDomainCheckRoute,
   InvitationsAcceptRoute: InvitationsAcceptRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
   ApiAdminStatsRoute: ApiAdminStatsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiCheckoutPolarRoute: ApiCheckoutPolarRoute,

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { createClient } from "@clickhouse/client";
+import { redis } from "../../../lib/redis";
 
 const clickhouse = createClient({
   url: process.env.CLICKHOUSE_URL,
@@ -13,6 +14,22 @@ export const Route = createFileRoute("/api/admin/stats")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        // Admin token check
+        const authHeader = request.headers.get("authorization") || "";
+        const token = authHeader.startsWith("Bearer ")
+          ? authHeader.slice("Bearer ".length)
+          : "";
+
+        if (!token) {
+          return json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const tokenKey = `admin:token:${token}`;
+        const exists = await redis.get(tokenKey);
+        if (!exists) {
+          return json({ error: "Forbidden" }, { status: 403 });
+        }
+
         const url = new URL(request.url);
         const period = url.searchParams.get("period") || "24h";
 

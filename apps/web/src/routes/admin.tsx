@@ -19,12 +19,33 @@ function AdminPage() {
   const [period, setPeriod] = useState("24h");
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [phrase, setPhrase] = useState("");
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const isAuthed = !!token;
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
-        const res = await fetch(`/api/admin/stats?period=${period}`);
+        const res = await fetch(`/api/admin/stats?period=${period}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          setToken(null);
+          setAuthError("Unauthorized. Please log in again.");
+          setLoading(false);
+          return;
+        }
+
         const json = await res.json();
         setData(
           json.map((d: any) => ({
@@ -43,7 +64,29 @@ function AdminPage() {
     fetchData();
     const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
-  }, [period]);
+  }, [period, token]);
+
+  const handleLogin = async () => {
+    setAuthError(null);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phrase }),
+      });
+
+      if (!res.ok) {
+        setAuthError("Invalid phrase");
+        return;
+      }
+
+      const json = await res.json();
+      setToken(json.token);
+      setPhrase("");
+    } catch (e) {
+      setAuthError("Login failed");
+    }
+  };
 
   const formatXAxis = (tickItem: number) => {
     const date = new Date(tickItem);
@@ -76,6 +119,51 @@ function AdminPage() {
         </div>
 
         <div className="bg-white/2 border border-white/5 rounded-2xl p-6 relative">
+          {!isAuthed && (
+            <div className="absolute inset-0 flex items-center justify-center backdrop-blur-xl bg-black/80 rounded-2xl z-10 transition-all duration-500">
+              <div className="w-full max-w-sm p-8 bg-[#070707] border border-white/10 rounded-2xl shadow-2xl">
+                <div className="flex flex-col items-center text-center mb-8">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-white/10 mb-4">
+                    <div className="w-6 h-6 bg-black rounded-full" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white tracking-tight">
+                    Admin Access
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Enter your passphrase to continue
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <input
+                    type="password"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
+                    placeholder="Passphrase"
+                    value={phrase}
+                    onChange={(e) => setPhrase(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleLogin();
+                    }}
+                    autoFocus
+                  />
+
+                  {authError && (
+                    <p className="text-red-400 text-xs text-center font-medium">
+                      {authError}
+                    </p>
+                  )}
+
+                  <button
+                    onClick={handleLogin}
+                    className="w-full bg-white text-black font-bold rounded-xl py-3 text-sm transition-all hover:bg-gray-200 active:scale-[0.98]"
+                  >
+                    Unlock Dashboard
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-medium text-white flex items-center gap-2">
