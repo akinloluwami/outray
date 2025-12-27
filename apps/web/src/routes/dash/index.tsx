@@ -333,6 +333,9 @@ function OverviewView() {
                     to="/dash/tunnels/$tunnelId"
                     params={{ tunnelId: tunnel.id }}
                     className="block p-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all group"
+                    search={{
+                      tab: "overview",
+                    }}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
