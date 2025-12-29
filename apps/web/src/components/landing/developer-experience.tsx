@@ -78,7 +78,7 @@ export const DeveloperExperience = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-24">
+    <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="mb-16">
         <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-white">
           First-class <br />

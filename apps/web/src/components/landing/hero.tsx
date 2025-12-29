@@ -51,7 +51,7 @@ export const Hero = () => {
           </h1>
           <p className="text-xl md:text-2xl text-center text-white/60 max-w-2xl leading-relaxed">
             OutRay is an open-source ngrok alternative that makes it easy to
-            expose your local development server to the internet with secure
+            expose your local development server to the internet via secure
             tunnels.
           </p>
         </div>

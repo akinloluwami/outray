@@ -1,18 +1,61 @@
 import { motion } from "motion/react";
-import { Globe, Server, Shield, Laptop } from "lucide-react";
+import { Globe, Server, Shield, Laptop, Sparkles } from "lucide-react";
 
 export function NetworkDiagram() {
   return (
     <section className="py-24 bg-black relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            How OutRay Works
-          </h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            A secure, high-performance tunnel connecting the internet to your
-            local machine. No firewall configuration required.
-          </p>
+        <div className="text-center mb-24">
+          <div className="relative inline-block">
+            <motion.div
+              className="absolute -inset-8 bg-linear-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-2xl rounded-full"
+              animate={{
+                opacity: [0.3, 0.6, 0.3],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <h2 className="relative text-6xl md:text-7xl font-bold italic tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white via-white/90 to-white/70 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              It just works
+            </h2>
+
+            <motion.div
+              className="absolute -top-8 -right-10 text-yellow-200"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.7, 1, 0.7],
+                rotate: [0, 15, 0],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Sparkles className="w-10 h-10 fill-yellow-200/20" />
+            </motion.div>
+            <motion.div
+              className="absolute -bottom-4 -left-10 text-purple-300"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5],
+                rotate: [0, -15, 0],
+              }}
+              transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+            >
+              <Sparkles className="w-8 h-8 fill-purple-300/20" />
+            </motion.div>
+            <motion.div
+              className="absolute top-0 -left-8 text-blue-300"
+              animate={{
+                scale: [0, 1, 0],
+                opacity: [0, 1, 0],
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            >
+              <Sparkles className="w-4 h-4 fill-blue-300/20" />
+            </motion.div>
+          </div>
         </div>
 
         <div className="relative">
