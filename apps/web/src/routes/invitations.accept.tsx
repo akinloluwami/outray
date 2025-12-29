@@ -42,18 +42,21 @@ function AcceptInvitation() {
 
     const accept = async () => {
       try {
-        const res = await authClient.organization.acceptInvitation({
+        const { data, error } = await authClient.organization.acceptInvitation({
           invitationId: token,
         });
 
-        if (res.error) {
-          setError(res.error.message || "An unknown error occurred");
+        if (error) {
+          setError(error.message || "An unknown error occurred");
           setStatus("error");
         } else {
           setStatus("success");
           // Redirect to dashboard after short delay
           setTimeout(() => {
-            navigate({ to: "/dash" });
+            navigate({
+              to: "/$orgSlug",
+              params: { orgSlug: "select" },
+            });
           }, 2000);
         }
       } catch (e) {

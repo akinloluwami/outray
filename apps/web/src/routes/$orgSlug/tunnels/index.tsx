@@ -13,9 +13,9 @@ import {
   Plus,
   AlertTriangle,
 } from "lucide-react";
-import { appClient } from "../@/lib/app-client";
-import { useAppStore } from "../@/lib/store";
-import { getPlanLimits } from "../@/lib/subscription-plans";
+import { appClient } from "@/lib/app-client";
+import { useAppStore } from "@/lib/store";
+import { getPlanLimits } from "@/lib/subscription-plans";
 import axios from "axios";
 import { NewTunnelModal } from "@/components/new-tunnel-modal";
 import { LimitModal } from "@/components/limit-modal";

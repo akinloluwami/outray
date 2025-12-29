@@ -6,7 +6,7 @@ import {
   useQueryClient,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { appClient } from "../@/lib/app-client";
+import { appClient } from "@/lib/app-client";
 import { AlertTriangle } from "lucide-react";
 import { TunnelHeader } from "@/components/tunnel-details/tunnel-header";
 import { TunnelTabs } from "@/components/tunnel-details/tunnel-tabs";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/$orgSlug/tunnels/$tunnelId")({
 });
 
 function TunnelDetailView() {
-  const { tunnelId } = Route.useParams();
+  const { tunnelId, orgSlug } = Route.useParams();
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const activeTab = search.tab;
@@ -96,7 +96,13 @@ function TunnelDetailView() {
           The tunnel you are looking for does not exist or you don't have access
           to it.
         </p>
-        <Link to="/dash/tunnels" className="mt-4 text-accent hover:underline">
+        <Link
+          to="/$orgSlug/tunnels"
+          className="mt-4 text-accent hover:underline"
+          params={{
+            orgSlug,
+          }}
+        >
           Back to Tunnels
         </Link>
       </div>

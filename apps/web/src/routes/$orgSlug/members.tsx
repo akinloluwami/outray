@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Plus,
   MoreVertical,
@@ -429,12 +429,14 @@ function MembersView() {
                 <>
                   {" "}
                   Go to{" "}
-                  <a
-                    href="/dash/billing"
+                  <Link
+                    to="/$orgSlug/billing"
                     className="text-yellow-500 hover:underline"
+                    params={{ orgSlug: selectedOrganization?.slug! }}
+                    search={{ success: false }}
                   >
                     Billing
-                  </a>{" "}
+                  </Link>{" "}
                   to add more member slots or upgrade your plan.
                 </>
               )}

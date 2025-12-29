@@ -1,5 +1,5 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useAppStore } from "../@/lib/store";
+import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/$orgSlug/settings/")({
   component: () => {

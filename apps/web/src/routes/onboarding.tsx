@@ -27,12 +27,16 @@ function Onboarding() {
     const checkSession = async () => {
       try {
         const session = await authClient.getSession();
+        const { data: organizations } = await authClient.organization.list();
         if (!session.data) {
-          // navigate({ to: "/login" });
+          navigate({ to: "/login" });
           return;
         }
         if (session.data.session.activeOrganizationId) {
-          // navigate({ to: "/dash" });
+          navigate({
+            to: "/$orgSlug",
+            params: { orgSlug: organizations?.[0].slug! },
+          });
           return;
         }
       } catch (error) {

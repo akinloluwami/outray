@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, Hash, Type } from "lucide-react";
-import { useAppStore } from "../@/lib/store";
-import { authClient } from "../@/lib/auth-client";
+import { useAppStore } from "@/lib/store";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/$orgSlug/settings/organization")({
   component: OrganizationSettingsView,

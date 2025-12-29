@@ -1,3 +1,5 @@
+import { useParams } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { AlertCircle } from "lucide-react";
 
 interface DomainLimitWarningProps {
@@ -13,6 +15,8 @@ export function DomainLimitWarning({
 }: DomainLimitWarningProps) {
   if (!isAtLimit) return null;
 
+  const { orgSlug } = useParams({ from: "/$orgSlug" });
+
   return (
     <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 flex items-start gap-3">
       <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
@@ -26,12 +30,14 @@ export function DomainLimitWarning({
             <>
               {" "}
               Go to{" "}
-              <a
-                href="/dash/billing"
+              <Link
+                to="/$orgSlug/billing"
                 className="text-yellow-500 hover:underline"
+                params={{ orgSlug }}
+                search={{ success: false }}
               >
                 Billing
-              </a>{" "}
+              </Link>{" "}
               upgrade to Beam for up to 10 custom domains or Pulse for unlimited
               domains.
             </>
