@@ -34,7 +34,6 @@ export function SubdomainLimitWarning({
                 to="/$orgSlug/billing"
                 className="text-yellow-500 hover:underline"
                 params={{ orgSlug }}
-                search={{ success: false }}
               >
                 Billing
               </Link>{" "}

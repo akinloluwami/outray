@@ -11,6 +11,7 @@ import {
   Link2,
   CreditCard,
   Users,
+  Key,
 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { authClient, usePermission } from "@/lib/auth-client";
@@ -140,6 +141,11 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
           to: "/$orgSlug/settings",
           label: "Settings",
           icon: <Settings size={NAV_ICON_SIZE} />,
+        },
+        {
+          to: "/$orgSlug/tokens",
+          label: "API Tokens",
+          icon: <Key size={NAV_ICON_SIZE} />,
         },
       ],
     },

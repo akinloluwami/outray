@@ -15,9 +15,12 @@ import { AlertModal } from "@/components/alert-modal";
 
 export const Route = createFileRoute("/$orgSlug/billing")({
   component: BillingView,
-  validateSearch: (search?: Record<string, unknown>) => {
+  validateSearch: (search?: Record<string, unknown>): { success?: boolean } => {
     return {
-      success: search?.success === "true" || search?.success === true,
+      success:
+        search?.success === "true" || search?.success === true
+          ? true
+          : undefined,
     };
   },
 });
@@ -42,6 +45,14 @@ function BillingView() {
     usePermission({
       billing: ["manage"],
     });
+
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data } = await authClient.getSession();
+      return data;
+    },
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["subscription", selectedOrganizationId],
@@ -76,14 +87,6 @@ function BillingView() {
       </div>
     );
   }
-
-  const { data: session } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const { data } = await authClient.getSession();
-      return data;
-    },
-  });
 
   const subscription = data?.subscription;
   const currentPlan = subscription?.plan || "free";

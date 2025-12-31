@@ -23,7 +23,8 @@ export const usePermission = (
     >[0]["permissions"]
   >,
 ) => {
-  const { data: activeOrg } = authClient.useActiveOrganization();
+  const { data: activeOrg, isPending: isOrgLoading } =
+    authClient.useActiveOrganization();
 
   const { data: member, isLoading } = useQuery({
     queryKey: ["active-member", activeOrg?.id],
@@ -34,8 +35,12 @@ export const usePermission = (
     enabled: !!activeOrg?.id,
   });
 
-  if (isLoading || !member) {
-    return { data: false, isPending: isLoading };
+  if (isOrgLoading || isLoading) {
+    return { data: false, isPending: true };
+  }
+
+  if (!member) {
+    return { data: false, isPending: false };
   }
 
   const hasPermission = authClient.organization.checkRolePermission({

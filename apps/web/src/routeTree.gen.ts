@@ -25,6 +25,7 @@ import { Route as ApiSubdomainsRouteImport } from './routes/api/subdomains'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiRequestsRouteImport } from './routes/api/requests'
 import { Route as ApiAuthTokensRouteImport } from './routes/api/auth-tokens'
+import { Route as OrgSlugTokensRouteImport } from './routes/$orgSlug/tokens'
 import { Route as OrgSlugSubdomainsRouteImport } from './routes/$orgSlug/subdomains'
 import { Route as OrgSlugSettingsRouteImport } from './routes/$orgSlug/settings'
 import { Route as OrgSlugRequestsRouteImport } from './routes/$orgSlug/requests'
@@ -144,6 +145,11 @@ const ApiAuthTokensRoute = ApiAuthTokensRouteImport.update({
   id: '/api/auth-tokens',
   path: '/api/auth-tokens',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrgSlugTokensRoute = OrgSlugTokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
+  getParentRoute: () => OrgSlugRoute,
 } as any)
 const OrgSlugSubdomainsRoute = OrgSlugSubdomainsRouteImport.update({
   id: '/subdomains',
@@ -362,6 +368,7 @@ export interface FileRoutesByFullPath {
   '/$orgSlug/requests': typeof OrgSlugRequestsRoute
   '/$orgSlug/settings': typeof OrgSlugSettingsRouteWithChildren
   '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/auth-tokens': typeof ApiAuthTokensRoute
   '/api/requests': typeof ApiRequestsRoute
   '/api/search': typeof ApiSearchRoute
@@ -417,6 +424,7 @@ export interface FileRoutesByTo {
   '/$orgSlug/members': typeof OrgSlugMembersRoute
   '/$orgSlug/requests': typeof OrgSlugRequestsRoute
   '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/auth-tokens': typeof ApiAuthTokensRoute
   '/api/requests': typeof ApiRequestsRoute
   '/api/search': typeof ApiSearchRoute
@@ -475,6 +483,7 @@ export interface FileRoutesById {
   '/$orgSlug/requests': typeof OrgSlugRequestsRoute
   '/$orgSlug/settings': typeof OrgSlugSettingsRouteWithChildren
   '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/auth-tokens': typeof ApiAuthTokensRoute
   '/api/requests': typeof ApiRequestsRoute
   '/api/search': typeof ApiSearchRoute
@@ -534,6 +543,7 @@ export interface FileRouteTypes {
     | '/$orgSlug/requests'
     | '/$orgSlug/settings'
     | '/$orgSlug/subdomains'
+    | '/$orgSlug/tokens'
     | '/api/auth-tokens'
     | '/api/requests'
     | '/api/search'
@@ -589,6 +599,7 @@ export interface FileRouteTypes {
     | '/$orgSlug/members'
     | '/$orgSlug/requests'
     | '/$orgSlug/subdomains'
+    | '/$orgSlug/tokens'
     | '/api/auth-tokens'
     | '/api/requests'
     | '/api/search'
@@ -646,6 +657,7 @@ export interface FileRouteTypes {
     | '/$orgSlug/requests'
     | '/$orgSlug/settings'
     | '/$orgSlug/subdomains'
+    | '/$orgSlug/tokens'
     | '/api/auth-tokens'
     | '/api/requests'
     | '/api/search'
@@ -843,6 +855,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth-tokens'
       preLoaderRoute: typeof ApiAuthTokensRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$orgSlug/tokens': {
+      id: '/$orgSlug/tokens'
+      path: '/tokens'
+      fullPath: '/$orgSlug/tokens'
+      preLoaderRoute: typeof OrgSlugTokensRouteImport
+      parentRoute: typeof OrgSlugRoute
     }
     '/$orgSlug/subdomains': {
       id: '/$orgSlug/subdomains'
@@ -1144,6 +1163,7 @@ interface OrgSlugRouteChildren {
   OrgSlugRequestsRoute: typeof OrgSlugRequestsRoute
   OrgSlugSettingsRoute: typeof OrgSlugSettingsRouteWithChildren
   OrgSlugSubdomainsRoute: typeof OrgSlugSubdomainsRoute
+  OrgSlugTokensRoute: typeof OrgSlugTokensRoute
   OrgSlugIndexRoute: typeof OrgSlugIndexRoute
   OrgSlugTunnelsTunnelIdRoute: typeof OrgSlugTunnelsTunnelIdRoute
   OrgSlugTunnelsIndexRoute: typeof OrgSlugTunnelsIndexRoute
@@ -1157,6 +1177,7 @@ const OrgSlugRouteChildren: OrgSlugRouteChildren = {
   OrgSlugRequestsRoute: OrgSlugRequestsRoute,
   OrgSlugSettingsRoute: OrgSlugSettingsRouteWithChildren,
   OrgSlugSubdomainsRoute: OrgSlugSubdomainsRoute,
+  OrgSlugTokensRoute: OrgSlugTokensRoute,
   OrgSlugIndexRoute: OrgSlugIndexRoute,
   OrgSlugTunnelsTunnelIdRoute: OrgSlugTunnelsTunnelIdRoute,
   OrgSlugTunnelsIndexRoute: OrgSlugTunnelsIndexRoute,

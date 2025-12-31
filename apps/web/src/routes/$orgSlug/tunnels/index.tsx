@@ -167,7 +167,6 @@ function TunnelsView() {
           <Link
             to="/$orgSlug/billing"
             params={{ orgSlug }}
-            search={{ success: false }}
             className="ml-auto px-4 py-2 bg-orange-500/10 hover:bg-orange-500/20 text-orange-200 text-xs font-medium rounded-lg transition-colors"
           >
             Upgrade Plan
