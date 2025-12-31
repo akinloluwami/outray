@@ -4,6 +4,8 @@ import { WebSocketServer } from "ws";
 import { TunnelRouter } from "./core/TunnelRouter";
 import { WSHandler } from "./core/WSHandler";
 import { HTTPProxy } from "./core/HTTPProxy";
+import { TCPProxy } from "./core/TCPProxy";
+import { UDPProxy } from "./core/UDPProxy";
 import { LogManager } from "./core/LogManager";
 import { config } from "./config";
 import { checkClickHouseConnection } from "./lib/clickhouse";
@@ -54,7 +56,21 @@ console.log("🚨 BASE DOMAIN LOADED:", config.baseDomain);
 const wssTunnel = new WebSocketServer({ noServer: true });
 const wssDashboard = new WebSocketServer({ noServer: true });
 
-new WSHandler(wssTunnel, router);
+// Create TCP and UDP proxies with Redis for bandwidth tracking
+const tcpProxy = new TCPProxy(
+  config.tcpPortRangeMin,
+  config.tcpPortRangeMax,
+  redis,
+);
+const udpProxy = new UDPProxy(
+  config.udpPortRangeMin,
+  config.udpPortRangeMax,
+  redis,
+);
+
+new WSHandler(wssTunnel, router, tcpProxy, udpProxy);
+
+console.log("✅ TCP/UDP tunnel support enabled");
 
 wssDashboard.on("connection", (ws, req) => {
   const url = new URL(req.url || "", "http://localhost");
