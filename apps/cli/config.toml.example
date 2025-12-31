@@ -1,0 +1,27 @@
+[global]
+org = "my-team"
+server_url = "wss://api.outray.dev/"
+
+[tunnel.web]
+protocol = "http"
+local_port = 3000
+local_host = "localhost"
+subdomain = "my-app"
+custom_domain = "app.example.com"
+
+[tunnel.api]
+protocol = "http"
+local_port = 8000
+subdomain = "api"
+
+[tunnel.postgres]
+protocol = "tcp"
+local_port = 5432
+local_host = "localhost"
+remote_port = 20000
+
+[tunnel.game-server]
+protocol = "udp"
+local_port = 5000
+remote_port = 30000
+

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
 import chalk from "chalk";
+import path from "path";
 import { OutRayClient } from "./client";
 import { TCPTunnelClient } from "./tcp-client";
 import { UDPTunnelClient } from "./udp-client";
 import { ConfigManager, OutRayConfig } from "./config";
 import { AuthManager } from "./auth";
+import { TomlConfigParser, ParsedTunnelConfig } from "./toml-config";
 import { version } from "../package.json";
 
 async function handleLogin(
@@ -227,9 +229,135 @@ async function getOrgSlugForDisplay(
   }
 }
 
+async function handleStartFromConfig(
+  configManager: ConfigManager,
+  webUrl: string,
+  serverUrl: string,
+  configPath?: string,
+) {
+  const defaultConfigPath = path.join(process.cwd(), "config.toml");
+  const tomlConfigPath = configPath || defaultConfigPath;
+
+  let parsedConfig;
+  try {
+    parsedConfig = TomlConfigParser.loadTomlConfig(tomlConfigPath);
+  } catch (error) {
+    console.log(
+      chalk.red(
+        `Failed to load config: ${error instanceof Error ? error.message : "Unknown error"}`,
+      ),
+    );
+    process.exit(1);
+  }
+
+  const authConfig = configManager.load();
+  if (!authConfig) {
+    console.log(chalk.red("Not logged in. Run: outray login"));
+    process.exit(1);
+  }
+
+  const clients: Array<
+    OutRayClient | TCPTunnelClient | UDPTunnelClient
+  > = [];
+
+  for (const tunnel of parsedConfig.tunnels) {
+    const tunnelServerUrl = tunnel.serverUrl || serverUrl;
+    let apiKey: string | undefined;
+
+    if (tunnel.org && authConfig.authType === "user" && authConfig.userToken) {
+      const authManager = new AuthManager(webUrl, authConfig.userToken);
+      const orgs = await authManager.fetchOrganizations();
+      const org = orgs.find((o) => o.slug === tunnel.org);
+
+      if (!org) {
+        console.log(
+          chalk.yellow(
+            `Warning: Organization "${tunnel.org}" not found for tunnel "${tunnel.name}", using default org`,
+          ),
+        );
+        try {
+          apiKey = await ensureValidToken(configManager, authConfig, webUrl);
+        } catch (error) {
+          console.log(
+            chalk.red(
+              `Failed to get token for tunnel "${tunnel.name}": ${error instanceof Error ? error.message : "Unknown error"}`,
+            ),
+          );
+          continue;
+        }
+      } else {
+        const { orgToken } = await authManager.exchangeToken(org.id);
+        apiKey = orgToken;
+      }
+    } else {
+      try {
+        apiKey = await ensureValidToken(configManager, authConfig, webUrl);
+      } catch (error) {
+        console.log(
+          chalk.red(
+            `Failed to get token for tunnel "${tunnel.name}": ${error instanceof Error ? error.message : "Unknown error"}`,
+          ),
+        );
+        continue;
+      }
+    }
+
+    let client: OutRayClient | TCPTunnelClient | UDPTunnelClient;
+
+    if (tunnel.protocol === "tcp") {
+      client = new TCPTunnelClient(
+        tunnel.localPort,
+        tunnelServerUrl,
+        apiKey,
+        tunnel.localHost,
+        tunnel.remotePort,
+      );
+    } else if (tunnel.protocol === "udp") {
+      client = new UDPTunnelClient(
+        tunnel.localPort,
+        tunnelServerUrl,
+        apiKey,
+        tunnel.localHost,
+        tunnel.remotePort,
+      );
+    } else {
+      client = new OutRayClient(
+        tunnel.localPort,
+        tunnelServerUrl,
+        apiKey,
+        tunnel.subdomain,
+        tunnel.customDomain,
+      );
+    }
+
+    clients.push(client);
+    client.start();
+  }
+
+  if (clients.length === 0) {
+    console.log(chalk.red("No tunnels could be started"));
+    process.exit(1);
+  }
+
+  console.log(chalk.green(`\nStarted ${clients.length} tunnel(s) from config`));
+
+  const shutdown = () => {
+    console.log(chalk.cyan("\nShutting down gracefully..."));
+    for (const client of clients) {
+      client.stop();
+    }
+    process.exit(0);
+  };
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}
+
 function printHelp() {
   console.log(chalk.cyan("\nUsage:"));
   console.log(chalk.cyan("  outray login           Login via browser"));
+  console.log(chalk.cyan("  outray start           Start tunnels from config.toml"));
+  console.log(chalk.cyan("  outray validate-config Validate config.toml file"));
   console.log(chalk.cyan("  outray <port>          Start HTTP tunnel"));
   console.log(chalk.cyan("  outray http <port>     Start HTTP tunnel"));
   console.log(chalk.cyan("  outray tcp <port>      Start TCP tunnel"));
@@ -240,6 +368,7 @@ function printHelp() {
   console.log(chalk.cyan("  outray version         Show version"));
   console.log(chalk.cyan("  outray help            Show this help message"));
   console.log(chalk.cyan("\nOptions:"));
+  console.log(chalk.cyan("  --config <path>        Path to config file (default: config.toml)"));
   console.log(chalk.cyan("  --org <slug>           Use specific org"));
   console.log(
     chalk.cyan("  --subdomain <name>     Custom subdomain (HTTP only)"),
@@ -307,6 +436,72 @@ async function main() {
       process.exit(1);
     }
     await handleWhoami(config, webUrl, isDev);
+    return;
+  }
+
+  if (command === "start") {
+    const configArg = args.find((arg) => arg.startsWith("--config"));
+    let configPath: string | undefined;
+    if (configArg) {
+      if (configArg.includes("=")) {
+        configPath = configArg.split("=")[1];
+      } else {
+        const configIndex = args.indexOf(configArg);
+        if (configIndex !== -1 && args[configIndex + 1]) {
+          configPath = args[configIndex + 1];
+        }
+      }
+    }
+    await handleStartFromConfig(configManager, webUrl, serverUrl, configPath);
+    return;
+  }
+
+  if (command === "validate-config" || command === "validate") {
+    const configArg = args.find((arg) => arg.startsWith("--config"));
+    let configPath: string | undefined;
+    if (configArg) {
+      if (configArg.includes("=")) {
+        configPath = configArg.split("=")[1];
+      } else {
+        const configIndex = args.indexOf(configArg);
+        if (configIndex !== -1 && args[configIndex + 1]) {
+          configPath = args[configIndex + 1];
+        }
+      }
+    } else {
+      configPath = path.join(process.cwd(), "config.toml");
+    }
+
+    try {
+      const parsedConfig = TomlConfigParser.loadTomlConfig(configPath || "");
+      console.log(chalk.green(`✓ Config file is valid`));
+      console.log(chalk.cyan(`\nFound ${parsedConfig.tunnels.length} tunnel(s):\n`));
+      for (const tunnel of parsedConfig.tunnels) {
+        console.log(chalk.dim(`  [${tunnel.name}]`));
+        console.log(`    Protocol: ${tunnel.protocol}`);
+        console.log(`    Local: ${tunnel.localHost}:${tunnel.localPort}`);
+        if (tunnel.subdomain) {
+          console.log(`    Subdomain: ${tunnel.subdomain}`);
+        }
+        if (tunnel.customDomain) {
+          console.log(`    Custom Domain: ${tunnel.customDomain}`);
+        }
+        if (tunnel.remotePort) {
+          console.log(`    Remote Port: ${tunnel.remotePort}`);
+        }
+        if (tunnel.org) {
+          console.log(`    Org: ${tunnel.org}`);
+        }
+        console.log();
+      }
+    } catch (error) {
+      console.log(
+        chalk.red(
+          `✗ Config validation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        ),
+      );
+      process.exit(1);
+    }
     return;
   }
 
