@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/cli/login")({
           const baseUrl =
             process.env.NODE_ENV === "development"
               ? "http://localhost:3000"
-              : "https://console.outray.dev";
+              : "https://outray.dev";
 
           return json({
             loginUrl: `${baseUrl}/cli/login?code=${code}`,

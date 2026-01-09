@@ -256,9 +256,7 @@ async function handleStartFromConfig(
     process.exit(1);
   }
 
-  const clients: Array<
-    OutRayClient | TCPTunnelClient | UDPTunnelClient
-  > = [];
+  const clients: Array<OutRayClient | TCPTunnelClient | UDPTunnelClient> = [];
 
   for (const tunnel of parsedConfig.tunnels) {
     let apiKey: string | undefined;
@@ -355,7 +353,9 @@ async function handleStartFromConfig(
 function printHelp() {
   console.log(chalk.cyan("\nUsage:"));
   console.log(chalk.cyan("  outray login           Login via browser"));
-  console.log(chalk.cyan("  outray start           Start tunnels from config.toml"));
+  console.log(
+    chalk.cyan("  outray start           Start tunnels from config.toml"),
+  );
   console.log(chalk.cyan("  outray validate-config Validate config.toml file"));
   console.log(chalk.cyan("  outray <port>          Start HTTP tunnel"));
   console.log(chalk.cyan("  outray http <port>     Start HTTP tunnel"));
@@ -367,7 +367,11 @@ function printHelp() {
   console.log(chalk.cyan("  outray version         Show version"));
   console.log(chalk.cyan("  outray help            Show this help message"));
   console.log(chalk.cyan("\nOptions:"));
-  console.log(chalk.cyan("  --config <path>        Path to config file (default: config.toml)"));
+  console.log(
+    chalk.cyan(
+      "  --config <path>        Path to config file (default: config.toml)",
+    ),
+  );
   console.log(chalk.cyan("  --org <slug>           Use specific org"));
   console.log(
     chalk.cyan("  --subdomain <name>     Custom subdomain (HTTP only)"),
@@ -392,7 +396,7 @@ async function main() {
     (isDev ? "ws://localhost:3547" : "wss://api.outray.dev/");
   const webUrl =
     process.env.OUTRAY_WEB_URL ||
-    (isDev ? "http://localhost:3000" : "https://console.outray.dev");
+    (isDev ? "http://localhost:3000" : "https://outray.dev");
 
   const configManager = new ConfigManager(isDev);
 
@@ -475,7 +479,9 @@ async function main() {
     try {
       const parsedConfig = TomlConfigParser.loadTomlConfig(tomlConfigPath);
       console.log(chalk.green(`✓ Config file is valid`));
-      console.log(chalk.cyan(`\nFound ${parsedConfig.tunnels.length} tunnel(s):\n`));
+      console.log(
+        chalk.cyan(`\nFound ${parsedConfig.tunnels.length} tunnel(s):\n`),
+      );
       for (const tunnel of parsedConfig.tunnels) {
         console.log(chalk.dim(`  [${tunnel.name}]`));
         console.log(`    Protocol: ${tunnel.protocol}`);
