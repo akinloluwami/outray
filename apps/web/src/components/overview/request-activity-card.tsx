@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 
-type ChartPoint = { hour: string; requests: number };
+type ChartPoint = { time: string; requests: number };
 
 export function RequestActivityCard({
   stats,
@@ -26,7 +26,7 @@ export function RequestActivityCard({
 
   const transformData = () =>
     chartData.map((d) => {
-      const date = new Date(d.hour);
+      const date = new Date(d.time);
       let timeLabel = "";
       if (timeRange === "1h") {
         timeLabel = date.toLocaleTimeString("en-US", {
