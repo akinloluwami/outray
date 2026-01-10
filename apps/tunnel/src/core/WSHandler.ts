@@ -19,6 +19,9 @@ export class WSHandler {
   private tcpProxy: TCPProxy;
   private udpProxy: UDPProxy;
   private webApiUrl: string;
+  private heartbeatInterval: NodeJS.Timeout | null = null;
+  private readonly HEARTBEAT_INTERVAL_MS = 30000; // 30 seconds
+  private readonly HEARTBEAT_TIMEOUT_MS = 35000; // 35 seconds (slightly longer than interval)
 
   constructor(
     wss: WebSocketServer,
@@ -32,6 +35,42 @@ export class WSHandler {
     this.udpProxy = udpProxy || new UDPProxy();
     this.webApiUrl = process.env.WEB_API_URL || "http://localhost:3000/api";
     this.setupWebSocketServer();
+    this.startHeartbeatCheck();
+  }
+
+  /**
+   * Server-side heartbeat check to detect and clean up dead connections.
+   * This handles cases where clients go to sleep (laptop lid close) and
+   * connections become "half-open" zombies that block reconnection.
+   */
+  private startHeartbeatCheck(): void {
+    this.heartbeatInterval = setInterval(() => {
+      this.wss.clients.forEach((ws: WebSocket) => {
+        const extWs = ws as WebSocket & {
+          isAlive?: boolean;
+          tunnelId?: string;
+        };
+
+        if (extWs.isAlive === false) {
+          // Client didn't respond to previous ping, terminate connection
+          console.log(
+            `Terminating unresponsive connection${extWs.tunnelId ? ` for tunnel ${extWs.tunnelId}` : ""}`,
+          );
+          return ws.terminate();
+        }
+
+        // Mark as not alive until we get a pong
+        extWs.isAlive = false;
+        ws.ping();
+      });
+    }, this.HEARTBEAT_INTERVAL_MS);
+  }
+
+  public shutdown(): void {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval);
+      this.heartbeatInterval = null;
+    }
   }
 
   private async validateAuthToken(token: string): Promise<{
@@ -170,6 +209,15 @@ export class WSHandler {
 
   private setupWebSocketServer(): void {
     this.wss.on("connection", (ws: WebSocket) => {
+      // Extend WebSocket with heartbeat tracking
+      const extWs = ws as WebSocket & { isAlive: boolean; tunnelId?: string };
+      extWs.isAlive = true;
+
+      // Handle pong responses from clients
+      ws.on("pong", () => {
+        extWs.isAlive = true;
+      });
+
       let tunnelId: string | null = null;
 
       ws.on("message", async (data: WebSocket.Data) => {
@@ -287,6 +335,7 @@ export class WSHandler {
                 });
 
                 tunnelId = tunnelIdForProtocol;
+                extWs.tunnelId = tunnelIdForProtocol; // Track for heartbeat logging
                 ws.send(
                   Protocol.encode({
                     type: "tunnel_opened",
@@ -362,6 +411,7 @@ export class WSHandler {
                 });
 
                 tunnelId = tunnelIdForProtocol;
+                extWs.tunnelId = tunnelIdForProtocol; // Track for heartbeat logging
                 ws.send(
                   Protocol.encode({
                     type: "tunnel_opened",
@@ -413,6 +463,7 @@ export class WSHandler {
 
               // Use custom domain as tunnel ID
               tunnelId = message.customDomain;
+              extWs.tunnelId = message.customDomain; // Track for heartbeat logging
               const tunnelUrl = `https://${message.customDomain}`;
 
               // Register tunnel in database and check limits
@@ -669,6 +720,7 @@ export class WSHandler {
 
             // Update tunnelId to full hostname for message routing
             tunnelId = fullHostname;
+            extWs.tunnelId = fullHostname; // Track for heartbeat logging
 
             const response = Protocol.encode({
               type: "tunnel_opened",

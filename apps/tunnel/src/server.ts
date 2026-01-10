@@ -68,7 +68,7 @@ const udpProxy = new UDPProxy(
   redis,
 );
 
-new WSHandler(wssTunnel, router, tcpProxy, udpProxy);
+const wsHandler = new WSHandler(wssTunnel, router, tcpProxy, udpProxy);
 
 console.log("✅ TCP/UDP tunnel support enabled");
 
@@ -116,6 +116,7 @@ httpServer.listen(config.port, () => {
 
 const shutdown = async () => {
   console.log("Shutting down tunnel server...");
+  wsHandler.shutdown();
   await router.shutdown();
   await redis.quit();
   httpServer.close(() => process.exit(0));

@@ -15,11 +15,15 @@ export class OutRayClient {
   private requestedSubdomain?: string;
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private pingInterval: NodeJS.Timeout | null = null;
+  private pongTimeout: NodeJS.Timeout | null = null;
   private shouldReconnect = true;
   private assignedUrl: string | null = null;
   private subdomainConflictHandled = false;
   private forceTakeover = false;
   private reconnectAttempts = 0;
+  private lastPongReceived = Date.now();
+  private readonly PING_INTERVAL_MS = 25000; // 25 seconds
+  private readonly PONG_TIMEOUT_MS = 10000; // 10 seconds to wait for pong
 
   constructor(
     localPort: number,
@@ -49,10 +53,18 @@ export class OutRayClient {
     }
 
     this.stopPing();
+    this.stopPongTimeout();
 
     if (this.ws) {
       this.ws.close();
       this.ws = null;
+    }
+  }
+
+  private stopPongTimeout(): void {
+    if (this.pongTimeout) {
+      clearTimeout(this.pongTimeout);
+      this.pongTimeout = null;
     }
   }
 
@@ -69,6 +81,8 @@ export class OutRayClient {
     });
     this.ws.on("pong", () => {
       // Received pong, connection is alive
+      this.lastPongReceived = Date.now();
+      this.stopPongTimeout();
     });
   }
 
@@ -257,11 +271,24 @@ export class OutRayClient {
 
   private startPing(): void {
     this.stopPing();
+    this.lastPongReceived = Date.now();
+
     this.pingInterval = setInterval(() => {
       if (this.ws?.readyState === WebSocket.OPEN) {
         this.ws.ping();
+
+        // Set a timeout to detect if pong is not received
+        this.stopPongTimeout();
+        this.pongTimeout = setTimeout(() => {
+          // No pong received within timeout - connection is likely dead
+          // This commonly happens after system sleep/wake
+          console.log(chalk.dim("Connection appears stale, reconnecting..."));
+          if (this.ws) {
+            this.ws.terminate(); // Force close instead of graceful close
+          }
+        }, this.PONG_TIMEOUT_MS);
       }
-    }, 30000); // Ping every 30 seconds
+    }, this.PING_INTERVAL_MS);
   }
 
   private stopPing(): void {
@@ -311,6 +338,7 @@ export class OutRayClient {
 
   private handleClose(code?: number, reason?: Buffer): void {
     this.stopPing();
+    this.stopPongTimeout();
     if (!this.shouldReconnect) return;
 
     const reasonStr = reason?.toString() || "";
