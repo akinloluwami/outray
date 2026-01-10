@@ -15,7 +15,7 @@ export function CreateTokenModal({ isOpen, onClose }: CreateTokenModalProps) {
   const [newTokenName, setNewTokenName] = useState("");
   const [createdToken, setCreatedToken] = useState<string | null>(null);
   const [copiedToken, setCopiedToken] = useState(false);
-  const { orgSlug } = useParams({ from: "/$orgSlug/tokens" });
+  const { orgSlug } = useParams({ from: "/api/$orgSlug/auth-tokens" });
 
   const createMutation = useMutation({
     mutationFn: async (name: string) => {

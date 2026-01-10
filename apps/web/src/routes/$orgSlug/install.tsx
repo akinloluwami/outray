@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Copy, Check, Download, Key, Play } from "lucide-react";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/install")({
+export const Route = createFileRoute("/$orgSlug/install")({
   component: Install,
 });
 

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { appClient } from "@/lib/app-client";
 import { authClient } from "@/lib/auth-client";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/requests")({
+export const Route = createFileRoute("/$orgSlug/requests")({
   component: RequestsView,
 });
 

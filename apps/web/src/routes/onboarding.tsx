@@ -1,4 +1,4 @@
-import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import { authClient } from "@/lib/auth-client";
 import { appClient } from "@/lib/app-client";
@@ -10,7 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-export const Route = createFileRoute("/__authenticated/onboarding")({
+export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
 });
 
@@ -26,8 +26,14 @@ function Onboarding() {
   const { data: sessionData, isPending: sessionPending } =
     authClient.useSession();
 
-  if (!sessionPending && !sessionData?.session.id) {
-    return <Navigate to="/login" />;
+  useEffect(() => {
+    if (!sessionPending && !sessionData?.session.id) {
+      navigate({ to: "/login" });
+    }
+  }, [sessionPending, sessionData?.session.id, navigate]);
+
+  if (sessionPending || !sessionData?.session.id) {
+    return null;
   }
 
   const validateSlug = (value: string) => {

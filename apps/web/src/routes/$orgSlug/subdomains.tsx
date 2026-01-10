@@ -10,7 +10,7 @@ import { CreateSubdomainModal } from "@/components/subdomains/create-subdomain-m
 import { SubdomainCard } from "@/components/subdomains/subdomain-card";
 import { LimitModal } from "@/components/limit-modal";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/subdomains")({
+export const Route = createFileRoute("/$orgSlug/subdomains")({
   component: SubdomainsView,
 });
 

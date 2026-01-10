@@ -20,7 +20,7 @@ import { ConfirmModal } from "@/components/confirm-modal";
 import { ChangeRoleModal } from "@/components/change-role-modal";
 import { useEffect, useRef } from "react";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/members")({
+export const Route = createFileRoute("/$orgSlug/members")({
   component: MembersView,
 });
 

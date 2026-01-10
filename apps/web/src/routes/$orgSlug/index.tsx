@@ -12,7 +12,7 @@ import { RequestActivityCard } from "@/components/overview/request-activity-card
 import { ActiveTunnelsPanel } from "@/components/overview/active-tunnels-panel";
 import { OverviewSkeleton } from "@/components/overview/overview-skeleton";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/")({
+export const Route = createFileRoute("/$orgSlug/")({
   component: OverviewView,
 });
 

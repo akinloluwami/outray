@@ -15,7 +15,7 @@ import { ProtocolOverview } from "@/components/tunnel-details/protocol-overview"
 import { ProtocolEvents } from "@/components/tunnel-details/protocol-events";
 import { TunnelRequests } from "@/components/tunnel-details/tunnel-requests";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/tunnels/$tunnelId")({
+export const Route = createFileRoute("/$orgSlug/tunnels/$tunnelId")({
   component: TunnelDetailView,
   validateSearch: (search: Record<string, unknown>) => {
     return {

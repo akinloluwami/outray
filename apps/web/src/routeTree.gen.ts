@@ -12,19 +12,29 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SelectRouteImport } from './routes/select'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EmailTemplatesRouteImport } from './routes/email-templates'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as _authenticatedRouteImport } from './routes/__authenticated'
+import { Route as OrgSlugRouteImport } from './routes/$orgSlug'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrgSlugIndexRouteImport } from './routes/$orgSlug/index'
 import { Route as InvitationsAcceptRouteImport } from './routes/invitations.accept'
 import { Route as InternalDomainCheckRouteImport } from './routes/internal/domain-check'
 import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as CliLoginRouteImport } from './routes/cli.login'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
-import { Route as _authenticatedOnboardingRouteImport } from './routes/__authenticated/onboarding'
-import { Route as _authenticatedOrgSlugRouteImport } from './routes/__authenticated/$orgSlug'
-import { Route as _authenticatedOrgSlugIndexRouteImport } from './routes/__authenticated/$orgSlug/index'
+import { Route as OrgSlugTokensRouteImport } from './routes/$orgSlug/tokens'
+import { Route as OrgSlugSubdomainsRouteImport } from './routes/$orgSlug/subdomains'
+import { Route as OrgSlugSettingsRouteImport } from './routes/$orgSlug/settings'
+import { Route as OrgSlugRequestsRouteImport } from './routes/$orgSlug/requests'
+import { Route as OrgSlugMembersRouteImport } from './routes/$orgSlug/members'
+import { Route as OrgSlugInstallRouteImport } from './routes/$orgSlug/install'
+import { Route as OrgSlugDomainsRouteImport } from './routes/$orgSlug/domains'
+import { Route as OrgSlugBillingRouteImport } from './routes/$orgSlug/billing'
+import { Route as OrgSlugTunnelsIndexRouteImport } from './routes/$orgSlug/tunnels/index'
+import { Route as OrgSlugSettingsIndexRouteImport } from './routes/$orgSlug/settings/index'
 import { Route as ApiWebhooksPolarRouteImport } from './routes/api/webhooks/polar'
 import { Route as ApiTunnelRegisterRouteImport } from './routes/api/tunnel/register'
 import { Route as ApiTunnelCheckSubdomainRouteImport } from './routes/api/tunnel/check-subdomain'
@@ -43,19 +53,12 @@ import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiOrgSlugSubscriptionsRouteImport } from './routes/api/$orgSlug/subscriptions'
 import { Route as ApiOrgSlugRequestsRouteImport } from './routes/api/$orgSlug/requests'
 import { Route as ApiOrgSlugAuthTokensRouteImport } from './routes/api/$orgSlug/auth-tokens'
-import { Route as _authenticatedOrgSlugTokensRouteImport } from './routes/__authenticated/$orgSlug/tokens'
-import { Route as _authenticatedOrgSlugSubdomainsRouteImport } from './routes/__authenticated/$orgSlug/subdomains'
-import { Route as _authenticatedOrgSlugSettingsRouteImport } from './routes/__authenticated/$orgSlug/settings'
-import { Route as _authenticatedOrgSlugRequestsRouteImport } from './routes/__authenticated/$orgSlug/requests'
-import { Route as _authenticatedOrgSlugMembersRouteImport } from './routes/__authenticated/$orgSlug/members'
-import { Route as _authenticatedOrgSlugInstallRouteImport } from './routes/__authenticated/$orgSlug/install'
-import { Route as _authenticatedOrgSlugDomainsRouteImport } from './routes/__authenticated/$orgSlug/domains'
-import { Route as _authenticatedOrgSlugBillingRouteImport } from './routes/__authenticated/$orgSlug/billing'
+import { Route as OrgSlugTunnelsTunnelIdRouteImport } from './routes/$orgSlug/tunnels/$tunnelId'
+import { Route as OrgSlugSettingsProfileRouteImport } from './routes/$orgSlug/settings/profile'
+import { Route as OrgSlugSettingsOrganizationRouteImport } from './routes/$orgSlug/settings/organization'
 import { Route as ApiOrgSlugTunnelsIndexRouteImport } from './routes/api/$orgSlug/tunnels/index'
 import { Route as ApiOrgSlugSubdomainsIndexRouteImport } from './routes/api/$orgSlug/subdomains/index'
 import { Route as ApiOrgSlugDomainsIndexRouteImport } from './routes/api/$orgSlug/domains/index'
-import { Route as _authenticatedOrgSlugTunnelsIndexRouteImport } from './routes/__authenticated/$orgSlug/tunnels/index'
-import { Route as _authenticatedOrgSlugSettingsIndexRouteImport } from './routes/__authenticated/$orgSlug/settings/index'
 import { Route as ApiCliLoginStatusRouteImport } from './routes/api/cli/login/status'
 import { Route as ApiOrgSlugTunnelsTunnelIdRouteImport } from './routes/api/$orgSlug/tunnels/$tunnelId'
 import { Route as ApiOrgSlugSubdomainsSubdomainIdRouteImport } from './routes/api/$orgSlug/subdomains/$subdomainId'
@@ -65,9 +68,6 @@ import { Route as ApiOrgSlugStatsOverviewRouteImport } from './routes/api/$orgSl
 import { Route as ApiOrgSlugStatsBandwidthRouteImport } from './routes/api/$orgSlug/stats/bandwidth'
 import { Route as ApiOrgSlugPortalPolarRouteImport } from './routes/api/$orgSlug/portal/polar'
 import { Route as ApiOrgSlugDomainsDomainIdRouteImport } from './routes/api/$orgSlug/domains/$domainId'
-import { Route as _authenticatedOrgSlugTunnelsTunnelIdRouteImport } from './routes/__authenticated/$orgSlug/tunnels/$tunnelId'
-import { Route as _authenticatedOrgSlugSettingsProfileRouteImport } from './routes/__authenticated/$orgSlug/settings/profile'
-import { Route as _authenticatedOrgSlugSettingsOrganizationRouteImport } from './routes/__authenticated/$orgSlug/settings/organization'
 import { Route as ApiOrgSlugTunnelsTunnelIdStopRouteImport } from './routes/api/$orgSlug/tunnels/$tunnelId.stop'
 import { Route as ApiOrgSlugDomainsDomainIdVerifyRouteImport } from './routes/api/$orgSlug/domains/$domainId.verify'
 
@@ -84,6 +84,11 @@ const SelectRoute = SelectRouteImport.update({
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -105,10 +110,20 @@ const _authenticatedRoute = _authenticatedRouteImport.update({
   id: '/__authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrgSlugRoute = OrgSlugRouteImport.update({
+  id: '/$orgSlug',
+  path: '/$orgSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrgSlugIndexRoute = OrgSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrgSlugRoute,
 } as any)
 const InvitationsAcceptRoute = InvitationsAcceptRouteImport.update({
   id: '/invitations/accept',
@@ -135,23 +150,56 @@ const ApiSearchRoute = ApiSearchRouteImport.update({
   path: '/api/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _authenticatedOnboardingRoute =
-  _authenticatedOnboardingRouteImport.update({
-    id: '/onboarding',
-    path: '/onboarding',
-    getParentRoute: () => _authenticatedRoute,
-  } as any)
-const _authenticatedOrgSlugRoute = _authenticatedOrgSlugRouteImport.update({
-  id: '/$orgSlug',
-  path: '/$orgSlug',
-  getParentRoute: () => _authenticatedRoute,
+const OrgSlugTokensRoute = OrgSlugTokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
+  getParentRoute: () => OrgSlugRoute,
 } as any)
-const _authenticatedOrgSlugIndexRoute =
-  _authenticatedOrgSlugIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
+const OrgSlugSubdomainsRoute = OrgSlugSubdomainsRouteImport.update({
+  id: '/subdomains',
+  path: '/subdomains',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugSettingsRoute = OrgSlugSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugRequestsRoute = OrgSlugRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugMembersRoute = OrgSlugMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugInstallRoute = OrgSlugInstallRouteImport.update({
+  id: '/install',
+  path: '/install',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugDomainsRoute = OrgSlugDomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugBillingRoute = OrgSlugBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugTunnelsIndexRoute = OrgSlugTunnelsIndexRouteImport.update({
+  id: '/tunnels/',
+  path: '/tunnels/',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugSettingsIndexRoute = OrgSlugSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrgSlugSettingsRoute,
+} as any)
 const ApiWebhooksPolarRoute = ApiWebhooksPolarRouteImport.update({
   id: '/api/webhooks/polar',
   path: '/api/webhooks/polar',
@@ -245,53 +293,21 @@ const ApiOrgSlugAuthTokensRoute = ApiOrgSlugAuthTokensRouteImport.update({
   path: '/api/$orgSlug/auth-tokens',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _authenticatedOrgSlugTokensRoute =
-  _authenticatedOrgSlugTokensRouteImport.update({
-    id: '/tokens',
-    path: '/tokens',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugSubdomainsRoute =
-  _authenticatedOrgSlugSubdomainsRouteImport.update({
-    id: '/subdomains',
-    path: '/subdomains',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugSettingsRoute =
-  _authenticatedOrgSlugSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugRequestsRoute =
-  _authenticatedOrgSlugRequestsRouteImport.update({
-    id: '/requests',
-    path: '/requests',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugMembersRoute =
-  _authenticatedOrgSlugMembersRouteImport.update({
-    id: '/members',
-    path: '/members',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugInstallRoute =
-  _authenticatedOrgSlugInstallRouteImport.update({
-    id: '/install',
-    path: '/install',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugDomainsRoute =
-  _authenticatedOrgSlugDomainsRouteImport.update({
-    id: '/domains',
-    path: '/domains',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugBillingRoute =
-  _authenticatedOrgSlugBillingRouteImport.update({
-    id: '/billing',
-    path: '/billing',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
+const OrgSlugTunnelsTunnelIdRoute = OrgSlugTunnelsTunnelIdRouteImport.update({
+  id: '/tunnels/$tunnelId',
+  path: '/tunnels/$tunnelId',
+  getParentRoute: () => OrgSlugRoute,
+} as any)
+const OrgSlugSettingsProfileRoute = OrgSlugSettingsProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => OrgSlugSettingsRoute,
+} as any)
+const OrgSlugSettingsOrganizationRoute =
+  OrgSlugSettingsOrganizationRouteImport.update({
+    id: '/organization',
+    path: '/organization',
+    getParentRoute: () => OrgSlugSettingsRoute,
   } as any)
 const ApiOrgSlugTunnelsIndexRoute = ApiOrgSlugTunnelsIndexRouteImport.update({
   id: '/api/$orgSlug/tunnels/',
@@ -309,18 +325,6 @@ const ApiOrgSlugDomainsIndexRoute = ApiOrgSlugDomainsIndexRouteImport.update({
   path: '/api/$orgSlug/domains/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _authenticatedOrgSlugTunnelsIndexRoute =
-  _authenticatedOrgSlugTunnelsIndexRouteImport.update({
-    id: '/tunnels/',
-    path: '/tunnels/',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugSettingsIndexRoute =
-  _authenticatedOrgSlugSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => _authenticatedOrgSlugSettingsRoute,
-  } as any)
 const ApiCliLoginStatusRoute = ApiCliLoginStatusRouteImport.update({
   id: '/status',
   path: '/status',
@@ -370,24 +374,6 @@ const ApiOrgSlugDomainsDomainIdRoute =
     path: '/api/$orgSlug/domains/$domainId',
     getParentRoute: () => rootRouteImport,
   } as any)
-const _authenticatedOrgSlugTunnelsTunnelIdRoute =
-  _authenticatedOrgSlugTunnelsTunnelIdRouteImport.update({
-    id: '/tunnels/$tunnelId',
-    path: '/tunnels/$tunnelId',
-    getParentRoute: () => _authenticatedOrgSlugRoute,
-  } as any)
-const _authenticatedOrgSlugSettingsProfileRoute =
-  _authenticatedOrgSlugSettingsProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => _authenticatedOrgSlugSettingsRoute,
-  } as any)
-const _authenticatedOrgSlugSettingsOrganizationRoute =
-  _authenticatedOrgSlugSettingsOrganizationRouteImport.update({
-    id: '/organization',
-    path: '/organization',
-    getParentRoute: () => _authenticatedOrgSlugSettingsRoute,
-  } as any)
 const ApiOrgSlugTunnelsTunnelIdStopRoute =
   ApiOrgSlugTunnelsTunnelIdStopRouteImport.update({
     id: '/stop',
@@ -403,27 +389,31 @@ const ApiOrgSlugDomainsDomainIdVerifyRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$orgSlug': typeof OrgSlugRouteWithChildren
   '/admin': typeof AdminRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/select': typeof SelectRoute
   '/signup': typeof SignupRoute
-  '/$orgSlug': typeof _authenticatedOrgSlugRouteWithChildren
-  '/onboarding': typeof _authenticatedOnboardingRoute
+  '/$orgSlug/billing': typeof OrgSlugBillingRoute
+  '/$orgSlug/domains': typeof OrgSlugDomainsRoute
+  '/$orgSlug/install': typeof OrgSlugInstallRoute
+  '/$orgSlug/members': typeof OrgSlugMembersRoute
+  '/$orgSlug/requests': typeof OrgSlugRequestsRoute
+  '/$orgSlug/settings': typeof OrgSlugSettingsRouteWithChildren
+  '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/search': typeof ApiSearchRoute
   '/cli/login': typeof CliLoginRoute
   '/docs/$': typeof DocsSplatRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
-  '/$orgSlug/billing': typeof _authenticatedOrgSlugBillingRoute
-  '/$orgSlug/domains': typeof _authenticatedOrgSlugDomainsRoute
-  '/$orgSlug/install': typeof _authenticatedOrgSlugInstallRoute
-  '/$orgSlug/members': typeof _authenticatedOrgSlugMembersRoute
-  '/$orgSlug/requests': typeof _authenticatedOrgSlugRequestsRoute
-  '/$orgSlug/settings': typeof _authenticatedOrgSlugSettingsRouteWithChildren
-  '/$orgSlug/subdomains': typeof _authenticatedOrgSlugSubdomainsRoute
-  '/$orgSlug/tokens': typeof _authenticatedOrgSlugTokensRoute
+  '/$orgSlug/': typeof OrgSlugIndexRoute
+  '/$orgSlug/settings/organization': typeof OrgSlugSettingsOrganizationRoute
+  '/$orgSlug/settings/profile': typeof OrgSlugSettingsProfileRoute
+  '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/api/$orgSlug/auth-tokens': typeof ApiOrgSlugAuthTokensRoute
   '/api/$orgSlug/requests': typeof ApiOrgSlugRequestsRoute
   '/api/$orgSlug/subscriptions': typeof ApiOrgSlugSubscriptionsRoute
@@ -442,10 +432,8 @@ export interface FileRoutesByFullPath {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
-  '/$orgSlug/': typeof _authenticatedOrgSlugIndexRoute
-  '/$orgSlug/settings/organization': typeof _authenticatedOrgSlugSettingsOrganizationRoute
-  '/$orgSlug/settings/profile': typeof _authenticatedOrgSlugSettingsProfileRoute
-  '/$orgSlug/tunnels/$tunnelId': typeof _authenticatedOrgSlugTunnelsTunnelIdRoute
+  '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
+  '/$orgSlug/tunnels': typeof OrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains/$domainId': typeof ApiOrgSlugDomainsDomainIdRouteWithChildren
   '/api/$orgSlug/portal/polar': typeof ApiOrgSlugPortalPolarRoute
   '/api/$orgSlug/stats/bandwidth': typeof ApiOrgSlugStatsBandwidthRoute
@@ -455,8 +443,6 @@ export interface FileRoutesByFullPath {
   '/api/$orgSlug/subdomains/$subdomainId': typeof ApiOrgSlugSubdomainsSubdomainIdRoute
   '/api/$orgSlug/tunnels/$tunnelId': typeof ApiOrgSlugTunnelsTunnelIdRouteWithChildren
   '/api/cli/login/status': typeof ApiCliLoginStatusRoute
-  '/$orgSlug/settings/': typeof _authenticatedOrgSlugSettingsIndexRoute
-  '/$orgSlug/tunnels': typeof _authenticatedOrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains': typeof ApiOrgSlugDomainsIndexRoute
   '/api/$orgSlug/subdomains': typeof ApiOrgSlugSubdomainsIndexRoute
   '/api/$orgSlug/tunnels': typeof ApiOrgSlugTunnelsIndexRoute
@@ -468,22 +454,26 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/select': typeof SelectRoute
   '/signup': typeof SignupRoute
-  '/onboarding': typeof _authenticatedOnboardingRoute
+  '/$orgSlug/billing': typeof OrgSlugBillingRoute
+  '/$orgSlug/domains': typeof OrgSlugDomainsRoute
+  '/$orgSlug/install': typeof OrgSlugInstallRoute
+  '/$orgSlug/members': typeof OrgSlugMembersRoute
+  '/$orgSlug/requests': typeof OrgSlugRequestsRoute
+  '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/search': typeof ApiSearchRoute
   '/cli/login': typeof CliLoginRoute
   '/docs/$': typeof DocsSplatRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
-  '/$orgSlug/billing': typeof _authenticatedOrgSlugBillingRoute
-  '/$orgSlug/domains': typeof _authenticatedOrgSlugDomainsRoute
-  '/$orgSlug/install': typeof _authenticatedOrgSlugInstallRoute
-  '/$orgSlug/members': typeof _authenticatedOrgSlugMembersRoute
-  '/$orgSlug/requests': typeof _authenticatedOrgSlugRequestsRoute
-  '/$orgSlug/subdomains': typeof _authenticatedOrgSlugSubdomainsRoute
-  '/$orgSlug/tokens': typeof _authenticatedOrgSlugTokensRoute
+  '/$orgSlug': typeof OrgSlugIndexRoute
+  '/$orgSlug/settings/organization': typeof OrgSlugSettingsOrganizationRoute
+  '/$orgSlug/settings/profile': typeof OrgSlugSettingsProfileRoute
+  '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/api/$orgSlug/auth-tokens': typeof ApiOrgSlugAuthTokensRoute
   '/api/$orgSlug/requests': typeof ApiOrgSlugRequestsRoute
   '/api/$orgSlug/subscriptions': typeof ApiOrgSlugSubscriptionsRoute
@@ -502,10 +492,8 @@ export interface FileRoutesByTo {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
-  '/$orgSlug': typeof _authenticatedOrgSlugIndexRoute
-  '/$orgSlug/settings/organization': typeof _authenticatedOrgSlugSettingsOrganizationRoute
-  '/$orgSlug/settings/profile': typeof _authenticatedOrgSlugSettingsProfileRoute
-  '/$orgSlug/tunnels/$tunnelId': typeof _authenticatedOrgSlugTunnelsTunnelIdRoute
+  '/$orgSlug/settings': typeof OrgSlugSettingsIndexRoute
+  '/$orgSlug/tunnels': typeof OrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains/$domainId': typeof ApiOrgSlugDomainsDomainIdRouteWithChildren
   '/api/$orgSlug/portal/polar': typeof ApiOrgSlugPortalPolarRoute
   '/api/$orgSlug/stats/bandwidth': typeof ApiOrgSlugStatsBandwidthRoute
@@ -515,8 +503,6 @@ export interface FileRoutesByTo {
   '/api/$orgSlug/subdomains/$subdomainId': typeof ApiOrgSlugSubdomainsSubdomainIdRoute
   '/api/$orgSlug/tunnels/$tunnelId': typeof ApiOrgSlugTunnelsTunnelIdRouteWithChildren
   '/api/cli/login/status': typeof ApiCliLoginStatusRoute
-  '/$orgSlug/settings': typeof _authenticatedOrgSlugSettingsIndexRoute
-  '/$orgSlug/tunnels': typeof _authenticatedOrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains': typeof ApiOrgSlugDomainsIndexRoute
   '/api/$orgSlug/subdomains': typeof ApiOrgSlugSubdomainsIndexRoute
   '/api/$orgSlug/tunnels': typeof ApiOrgSlugTunnelsIndexRoute
@@ -526,28 +512,32 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/__authenticated': typeof _authenticatedRouteWithChildren
+  '/$orgSlug': typeof OrgSlugRouteWithChildren
+  '/__authenticated': typeof _authenticatedRoute
   '/admin': typeof AdminRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/select': typeof SelectRoute
   '/signup': typeof SignupRoute
-  '/__authenticated/$orgSlug': typeof _authenticatedOrgSlugRouteWithChildren
-  '/__authenticated/onboarding': typeof _authenticatedOnboardingRoute
+  '/$orgSlug/billing': typeof OrgSlugBillingRoute
+  '/$orgSlug/domains': typeof OrgSlugDomainsRoute
+  '/$orgSlug/install': typeof OrgSlugInstallRoute
+  '/$orgSlug/members': typeof OrgSlugMembersRoute
+  '/$orgSlug/requests': typeof OrgSlugRequestsRoute
+  '/$orgSlug/settings': typeof OrgSlugSettingsRouteWithChildren
+  '/$orgSlug/subdomains': typeof OrgSlugSubdomainsRoute
+  '/$orgSlug/tokens': typeof OrgSlugTokensRoute
   '/api/search': typeof ApiSearchRoute
   '/cli/login': typeof CliLoginRoute
   '/docs/$': typeof DocsSplatRoute
   '/internal/domain-check': typeof InternalDomainCheckRoute
   '/invitations/accept': typeof InvitationsAcceptRoute
-  '/__authenticated/$orgSlug/billing': typeof _authenticatedOrgSlugBillingRoute
-  '/__authenticated/$orgSlug/domains': typeof _authenticatedOrgSlugDomainsRoute
-  '/__authenticated/$orgSlug/install': typeof _authenticatedOrgSlugInstallRoute
-  '/__authenticated/$orgSlug/members': typeof _authenticatedOrgSlugMembersRoute
-  '/__authenticated/$orgSlug/requests': typeof _authenticatedOrgSlugRequestsRoute
-  '/__authenticated/$orgSlug/settings': typeof _authenticatedOrgSlugSettingsRouteWithChildren
-  '/__authenticated/$orgSlug/subdomains': typeof _authenticatedOrgSlugSubdomainsRoute
-  '/__authenticated/$orgSlug/tokens': typeof _authenticatedOrgSlugTokensRoute
+  '/$orgSlug/': typeof OrgSlugIndexRoute
+  '/$orgSlug/settings/organization': typeof OrgSlugSettingsOrganizationRoute
+  '/$orgSlug/settings/profile': typeof OrgSlugSettingsProfileRoute
+  '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/api/$orgSlug/auth-tokens': typeof ApiOrgSlugAuthTokensRoute
   '/api/$orgSlug/requests': typeof ApiOrgSlugRequestsRoute
   '/api/$orgSlug/subscriptions': typeof ApiOrgSlugSubscriptionsRoute
@@ -566,10 +556,8 @@ export interface FileRoutesById {
   '/api/tunnel/check-subdomain': typeof ApiTunnelCheckSubdomainRoute
   '/api/tunnel/register': typeof ApiTunnelRegisterRoute
   '/api/webhooks/polar': typeof ApiWebhooksPolarRoute
-  '/__authenticated/$orgSlug/': typeof _authenticatedOrgSlugIndexRoute
-  '/__authenticated/$orgSlug/settings/organization': typeof _authenticatedOrgSlugSettingsOrganizationRoute
-  '/__authenticated/$orgSlug/settings/profile': typeof _authenticatedOrgSlugSettingsProfileRoute
-  '/__authenticated/$orgSlug/tunnels/$tunnelId': typeof _authenticatedOrgSlugTunnelsTunnelIdRoute
+  '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
+  '/$orgSlug/tunnels/': typeof OrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains/$domainId': typeof ApiOrgSlugDomainsDomainIdRouteWithChildren
   '/api/$orgSlug/portal/polar': typeof ApiOrgSlugPortalPolarRoute
   '/api/$orgSlug/stats/bandwidth': typeof ApiOrgSlugStatsBandwidthRoute
@@ -579,8 +567,6 @@ export interface FileRoutesById {
   '/api/$orgSlug/subdomains/$subdomainId': typeof ApiOrgSlugSubdomainsSubdomainIdRoute
   '/api/$orgSlug/tunnels/$tunnelId': typeof ApiOrgSlugTunnelsTunnelIdRouteWithChildren
   '/api/cli/login/status': typeof ApiCliLoginStatusRoute
-  '/__authenticated/$orgSlug/settings/': typeof _authenticatedOrgSlugSettingsIndexRoute
-  '/__authenticated/$orgSlug/tunnels/': typeof _authenticatedOrgSlugTunnelsIndexRoute
   '/api/$orgSlug/domains/': typeof ApiOrgSlugDomainsIndexRoute
   '/api/$orgSlug/subdomains/': typeof ApiOrgSlugSubdomainsIndexRoute
   '/api/$orgSlug/tunnels/': typeof ApiOrgSlugTunnelsIndexRoute
@@ -591,19 +577,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$orgSlug'
     | '/admin'
     | '/email-templates'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/select'
     | '/signup'
-    | '/$orgSlug'
-    | '/onboarding'
-    | '/api/search'
-    | '/cli/login'
-    | '/docs/$'
-    | '/internal/domain-check'
-    | '/invitations/accept'
     | '/$orgSlug/billing'
     | '/$orgSlug/domains'
     | '/$orgSlug/install'
@@ -612,6 +593,15 @@ export interface FileRouteTypes {
     | '/$orgSlug/settings'
     | '/$orgSlug/subdomains'
     | '/$orgSlug/tokens'
+    | '/api/search'
+    | '/cli/login'
+    | '/docs/$'
+    | '/internal/domain-check'
+    | '/invitations/accept'
+    | '/$orgSlug/'
+    | '/$orgSlug/settings/organization'
+    | '/$orgSlug/settings/profile'
+    | '/$orgSlug/tunnels/$tunnelId'
     | '/api/$orgSlug/auth-tokens'
     | '/api/$orgSlug/requests'
     | '/api/$orgSlug/subscriptions'
@@ -630,10 +620,8 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/webhooks/polar'
-    | '/$orgSlug/'
-    | '/$orgSlug/settings/organization'
-    | '/$orgSlug/settings/profile'
-    | '/$orgSlug/tunnels/$tunnelId'
+    | '/$orgSlug/settings/'
+    | '/$orgSlug/tunnels'
     | '/api/$orgSlug/domains/$domainId'
     | '/api/$orgSlug/portal/polar'
     | '/api/$orgSlug/stats/bandwidth'
@@ -643,8 +631,6 @@ export interface FileRouteTypes {
     | '/api/$orgSlug/subdomains/$subdomainId'
     | '/api/$orgSlug/tunnels/$tunnelId'
     | '/api/cli/login/status'
-    | '/$orgSlug/settings/'
-    | '/$orgSlug/tunnels'
     | '/api/$orgSlug/domains'
     | '/api/$orgSlug/subdomains'
     | '/api/$orgSlug/tunnels'
@@ -656,15 +642,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/email-templates'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/select'
     | '/signup'
-    | '/onboarding'
-    | '/api/search'
-    | '/cli/login'
-    | '/docs/$'
-    | '/internal/domain-check'
-    | '/invitations/accept'
     | '/$orgSlug/billing'
     | '/$orgSlug/domains'
     | '/$orgSlug/install'
@@ -672,6 +653,15 @@ export interface FileRouteTypes {
     | '/$orgSlug/requests'
     | '/$orgSlug/subdomains'
     | '/$orgSlug/tokens'
+    | '/api/search'
+    | '/cli/login'
+    | '/docs/$'
+    | '/internal/domain-check'
+    | '/invitations/accept'
+    | '/$orgSlug'
+    | '/$orgSlug/settings/organization'
+    | '/$orgSlug/settings/profile'
+    | '/$orgSlug/tunnels/$tunnelId'
     | '/api/$orgSlug/auth-tokens'
     | '/api/$orgSlug/requests'
     | '/api/$orgSlug/subscriptions'
@@ -690,10 +680,8 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/webhooks/polar'
-    | '/$orgSlug'
-    | '/$orgSlug/settings/organization'
-    | '/$orgSlug/settings/profile'
-    | '/$orgSlug/tunnels/$tunnelId'
+    | '/$orgSlug/settings'
+    | '/$orgSlug/tunnels'
     | '/api/$orgSlug/domains/$domainId'
     | '/api/$orgSlug/portal/polar'
     | '/api/$orgSlug/stats/bandwidth'
@@ -703,8 +691,6 @@ export interface FileRouteTypes {
     | '/api/$orgSlug/subdomains/$subdomainId'
     | '/api/$orgSlug/tunnels/$tunnelId'
     | '/api/cli/login/status'
-    | '/$orgSlug/settings'
-    | '/$orgSlug/tunnels'
     | '/api/$orgSlug/domains'
     | '/api/$orgSlug/subdomains'
     | '/api/$orgSlug/tunnels'
@@ -713,28 +699,32 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$orgSlug'
     | '/__authenticated'
     | '/admin'
     | '/email-templates'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/select'
     | '/signup'
-    | '/__authenticated/$orgSlug'
-    | '/__authenticated/onboarding'
+    | '/$orgSlug/billing'
+    | '/$orgSlug/domains'
+    | '/$orgSlug/install'
+    | '/$orgSlug/members'
+    | '/$orgSlug/requests'
+    | '/$orgSlug/settings'
+    | '/$orgSlug/subdomains'
+    | '/$orgSlug/tokens'
     | '/api/search'
     | '/cli/login'
     | '/docs/$'
     | '/internal/domain-check'
     | '/invitations/accept'
-    | '/__authenticated/$orgSlug/billing'
-    | '/__authenticated/$orgSlug/domains'
-    | '/__authenticated/$orgSlug/install'
-    | '/__authenticated/$orgSlug/members'
-    | '/__authenticated/$orgSlug/requests'
-    | '/__authenticated/$orgSlug/settings'
-    | '/__authenticated/$orgSlug/subdomains'
-    | '/__authenticated/$orgSlug/tokens'
+    | '/$orgSlug/'
+    | '/$orgSlug/settings/organization'
+    | '/$orgSlug/settings/profile'
+    | '/$orgSlug/tunnels/$tunnelId'
     | '/api/$orgSlug/auth-tokens'
     | '/api/$orgSlug/requests'
     | '/api/$orgSlug/subscriptions'
@@ -753,10 +743,8 @@ export interface FileRouteTypes {
     | '/api/tunnel/check-subdomain'
     | '/api/tunnel/register'
     | '/api/webhooks/polar'
-    | '/__authenticated/$orgSlug/'
-    | '/__authenticated/$orgSlug/settings/organization'
-    | '/__authenticated/$orgSlug/settings/profile'
-    | '/__authenticated/$orgSlug/tunnels/$tunnelId'
+    | '/$orgSlug/settings/'
+    | '/$orgSlug/tunnels/'
     | '/api/$orgSlug/domains/$domainId'
     | '/api/$orgSlug/portal/polar'
     | '/api/$orgSlug/stats/bandwidth'
@@ -766,8 +754,6 @@ export interface FileRouteTypes {
     | '/api/$orgSlug/subdomains/$subdomainId'
     | '/api/$orgSlug/tunnels/$tunnelId'
     | '/api/cli/login/status'
-    | '/__authenticated/$orgSlug/settings/'
-    | '/__authenticated/$orgSlug/tunnels/'
     | '/api/$orgSlug/domains/'
     | '/api/$orgSlug/subdomains/'
     | '/api/$orgSlug/tunnels/'
@@ -777,10 +763,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  _authenticatedRoute: typeof _authenticatedRouteWithChildren
+  OrgSlugRoute: typeof OrgSlugRouteWithChildren
+  _authenticatedRoute: typeof _authenticatedRoute
   AdminRoute: typeof AdminRoute
   EmailTemplatesRoute: typeof EmailTemplatesRoute
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
   SelectRoute: typeof SelectRoute
   SignupRoute: typeof SignupRoute
@@ -843,6 +831,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -871,12 +866,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof _authenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$orgSlug': {
+      id: '/$orgSlug'
+      path: '/$orgSlug'
+      fullPath: '/$orgSlug'
+      preLoaderRoute: typeof OrgSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$orgSlug/': {
+      id: '/$orgSlug/'
+      path: '/'
+      fullPath: '/$orgSlug/'
+      preLoaderRoute: typeof OrgSlugIndexRouteImport
+      parentRoute: typeof OrgSlugRoute
     }
     '/invitations/accept': {
       id: '/invitations/accept'
@@ -913,26 +922,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__authenticated/onboarding': {
-      id: '/__authenticated/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof _authenticatedOnboardingRouteImport
-      parentRoute: typeof _authenticatedRoute
+    '/$orgSlug/tokens': {
+      id: '/$orgSlug/tokens'
+      path: '/tokens'
+      fullPath: '/$orgSlug/tokens'
+      preLoaderRoute: typeof OrgSlugTokensRouteImport
+      parentRoute: typeof OrgSlugRoute
     }
-    '/__authenticated/$orgSlug': {
-      id: '/__authenticated/$orgSlug'
-      path: '/$orgSlug'
-      fullPath: '/$orgSlug'
-      preLoaderRoute: typeof _authenticatedOrgSlugRouteImport
-      parentRoute: typeof _authenticatedRoute
+    '/$orgSlug/subdomains': {
+      id: '/$orgSlug/subdomains'
+      path: '/subdomains'
+      fullPath: '/$orgSlug/subdomains'
+      preLoaderRoute: typeof OrgSlugSubdomainsRouteImport
+      parentRoute: typeof OrgSlugRoute
     }
-    '/__authenticated/$orgSlug/': {
-      id: '/__authenticated/$orgSlug/'
+    '/$orgSlug/settings': {
+      id: '/$orgSlug/settings'
+      path: '/settings'
+      fullPath: '/$orgSlug/settings'
+      preLoaderRoute: typeof OrgSlugSettingsRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/requests': {
+      id: '/$orgSlug/requests'
+      path: '/requests'
+      fullPath: '/$orgSlug/requests'
+      preLoaderRoute: typeof OrgSlugRequestsRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/members': {
+      id: '/$orgSlug/members'
+      path: '/members'
+      fullPath: '/$orgSlug/members'
+      preLoaderRoute: typeof OrgSlugMembersRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/install': {
+      id: '/$orgSlug/install'
+      path: '/install'
+      fullPath: '/$orgSlug/install'
+      preLoaderRoute: typeof OrgSlugInstallRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/domains': {
+      id: '/$orgSlug/domains'
+      path: '/domains'
+      fullPath: '/$orgSlug/domains'
+      preLoaderRoute: typeof OrgSlugDomainsRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/billing': {
+      id: '/$orgSlug/billing'
+      path: '/billing'
+      fullPath: '/$orgSlug/billing'
+      preLoaderRoute: typeof OrgSlugBillingRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/tunnels/': {
+      id: '/$orgSlug/tunnels/'
+      path: '/tunnels'
+      fullPath: '/$orgSlug/tunnels'
+      preLoaderRoute: typeof OrgSlugTunnelsIndexRouteImport
+      parentRoute: typeof OrgSlugRoute
+    }
+    '/$orgSlug/settings/': {
+      id: '/$orgSlug/settings/'
       path: '/'
-      fullPath: '/$orgSlug/'
-      preLoaderRoute: typeof _authenticatedOrgSlugIndexRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
+      fullPath: '/$orgSlug/settings/'
+      preLoaderRoute: typeof OrgSlugSettingsIndexRouteImport
+      parentRoute: typeof OrgSlugSettingsRoute
     }
     '/api/webhooks/polar': {
       id: '/api/webhooks/polar'
@@ -1060,61 +1118,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiOrgSlugAuthTokensRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__authenticated/$orgSlug/tokens': {
-      id: '/__authenticated/$orgSlug/tokens'
-      path: '/tokens'
-      fullPath: '/$orgSlug/tokens'
-      preLoaderRoute: typeof _authenticatedOrgSlugTokensRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
+    '/$orgSlug/tunnels/$tunnelId': {
+      id: '/$orgSlug/tunnels/$tunnelId'
+      path: '/tunnels/$tunnelId'
+      fullPath: '/$orgSlug/tunnels/$tunnelId'
+      preLoaderRoute: typeof OrgSlugTunnelsTunnelIdRouteImport
+      parentRoute: typeof OrgSlugRoute
     }
-    '/__authenticated/$orgSlug/subdomains': {
-      id: '/__authenticated/$orgSlug/subdomains'
-      path: '/subdomains'
-      fullPath: '/$orgSlug/subdomains'
-      preLoaderRoute: typeof _authenticatedOrgSlugSubdomainsRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
+    '/$orgSlug/settings/profile': {
+      id: '/$orgSlug/settings/profile'
+      path: '/profile'
+      fullPath: '/$orgSlug/settings/profile'
+      preLoaderRoute: typeof OrgSlugSettingsProfileRouteImport
+      parentRoute: typeof OrgSlugSettingsRoute
     }
-    '/__authenticated/$orgSlug/settings': {
-      id: '/__authenticated/$orgSlug/settings'
-      path: '/settings'
-      fullPath: '/$orgSlug/settings'
-      preLoaderRoute: typeof _authenticatedOrgSlugSettingsRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/requests': {
-      id: '/__authenticated/$orgSlug/requests'
-      path: '/requests'
-      fullPath: '/$orgSlug/requests'
-      preLoaderRoute: typeof _authenticatedOrgSlugRequestsRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/members': {
-      id: '/__authenticated/$orgSlug/members'
-      path: '/members'
-      fullPath: '/$orgSlug/members'
-      preLoaderRoute: typeof _authenticatedOrgSlugMembersRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/install': {
-      id: '/__authenticated/$orgSlug/install'
-      path: '/install'
-      fullPath: '/$orgSlug/install'
-      preLoaderRoute: typeof _authenticatedOrgSlugInstallRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/domains': {
-      id: '/__authenticated/$orgSlug/domains'
-      path: '/domains'
-      fullPath: '/$orgSlug/domains'
-      preLoaderRoute: typeof _authenticatedOrgSlugDomainsRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/billing': {
-      id: '/__authenticated/$orgSlug/billing'
-      path: '/billing'
-      fullPath: '/$orgSlug/billing'
-      preLoaderRoute: typeof _authenticatedOrgSlugBillingRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
+    '/$orgSlug/settings/organization': {
+      id: '/$orgSlug/settings/organization'
+      path: '/organization'
+      fullPath: '/$orgSlug/settings/organization'
+      preLoaderRoute: typeof OrgSlugSettingsOrganizationRouteImport
+      parentRoute: typeof OrgSlugSettingsRoute
     }
     '/api/$orgSlug/tunnels/': {
       id: '/api/$orgSlug/tunnels/'
@@ -1136,20 +1159,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/$orgSlug/domains'
       preLoaderRoute: typeof ApiOrgSlugDomainsIndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/__authenticated/$orgSlug/tunnels/': {
-      id: '/__authenticated/$orgSlug/tunnels/'
-      path: '/tunnels'
-      fullPath: '/$orgSlug/tunnels'
-      preLoaderRoute: typeof _authenticatedOrgSlugTunnelsIndexRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/settings/': {
-      id: '/__authenticated/$orgSlug/settings/'
-      path: '/'
-      fullPath: '/$orgSlug/settings/'
-      preLoaderRoute: typeof _authenticatedOrgSlugSettingsIndexRouteImport
-      parentRoute: typeof _authenticatedOrgSlugSettingsRoute
     }
     '/api/cli/login/status': {
       id: '/api/cli/login/status'
@@ -1214,27 +1223,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiOrgSlugDomainsDomainIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__authenticated/$orgSlug/tunnels/$tunnelId': {
-      id: '/__authenticated/$orgSlug/tunnels/$tunnelId'
-      path: '/tunnels/$tunnelId'
-      fullPath: '/$orgSlug/tunnels/$tunnelId'
-      preLoaderRoute: typeof _authenticatedOrgSlugTunnelsTunnelIdRouteImport
-      parentRoute: typeof _authenticatedOrgSlugRoute
-    }
-    '/__authenticated/$orgSlug/settings/profile': {
-      id: '/__authenticated/$orgSlug/settings/profile'
-      path: '/profile'
-      fullPath: '/$orgSlug/settings/profile'
-      preLoaderRoute: typeof _authenticatedOrgSlugSettingsProfileRouteImport
-      parentRoute: typeof _authenticatedOrgSlugSettingsRoute
-    }
-    '/__authenticated/$orgSlug/settings/organization': {
-      id: '/__authenticated/$orgSlug/settings/organization'
-      path: '/organization'
-      fullPath: '/$orgSlug/settings/organization'
-      preLoaderRoute: typeof _authenticatedOrgSlugSettingsOrganizationRouteImport
-      parentRoute: typeof _authenticatedOrgSlugSettingsRoute
-    }
     '/api/$orgSlug/tunnels/$tunnelId/stop': {
       id: '/api/$orgSlug/tunnels/$tunnelId/stop'
       path: '/stop'
@@ -1252,76 +1240,52 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface _authenticatedOrgSlugSettingsRouteChildren {
-  _authenticatedOrgSlugSettingsOrganizationRoute: typeof _authenticatedOrgSlugSettingsOrganizationRoute
-  _authenticatedOrgSlugSettingsProfileRoute: typeof _authenticatedOrgSlugSettingsProfileRoute
-  _authenticatedOrgSlugSettingsIndexRoute: typeof _authenticatedOrgSlugSettingsIndexRoute
+interface OrgSlugSettingsRouteChildren {
+  OrgSlugSettingsOrganizationRoute: typeof OrgSlugSettingsOrganizationRoute
+  OrgSlugSettingsProfileRoute: typeof OrgSlugSettingsProfileRoute
+  OrgSlugSettingsIndexRoute: typeof OrgSlugSettingsIndexRoute
 }
 
-const _authenticatedOrgSlugSettingsRouteChildren: _authenticatedOrgSlugSettingsRouteChildren =
-  {
-    _authenticatedOrgSlugSettingsOrganizationRoute:
-      _authenticatedOrgSlugSettingsOrganizationRoute,
-    _authenticatedOrgSlugSettingsProfileRoute:
-      _authenticatedOrgSlugSettingsProfileRoute,
-    _authenticatedOrgSlugSettingsIndexRoute:
-      _authenticatedOrgSlugSettingsIndexRoute,
-  }
-
-const _authenticatedOrgSlugSettingsRouteWithChildren =
-  _authenticatedOrgSlugSettingsRoute._addFileChildren(
-    _authenticatedOrgSlugSettingsRouteChildren,
-  )
-
-interface _authenticatedOrgSlugRouteChildren {
-  _authenticatedOrgSlugBillingRoute: typeof _authenticatedOrgSlugBillingRoute
-  _authenticatedOrgSlugDomainsRoute: typeof _authenticatedOrgSlugDomainsRoute
-  _authenticatedOrgSlugInstallRoute: typeof _authenticatedOrgSlugInstallRoute
-  _authenticatedOrgSlugMembersRoute: typeof _authenticatedOrgSlugMembersRoute
-  _authenticatedOrgSlugRequestsRoute: typeof _authenticatedOrgSlugRequestsRoute
-  _authenticatedOrgSlugSettingsRoute: typeof _authenticatedOrgSlugSettingsRouteWithChildren
-  _authenticatedOrgSlugSubdomainsRoute: typeof _authenticatedOrgSlugSubdomainsRoute
-  _authenticatedOrgSlugTokensRoute: typeof _authenticatedOrgSlugTokensRoute
-  _authenticatedOrgSlugIndexRoute: typeof _authenticatedOrgSlugIndexRoute
-  _authenticatedOrgSlugTunnelsTunnelIdRoute: typeof _authenticatedOrgSlugTunnelsTunnelIdRoute
-  _authenticatedOrgSlugTunnelsIndexRoute: typeof _authenticatedOrgSlugTunnelsIndexRoute
+const OrgSlugSettingsRouteChildren: OrgSlugSettingsRouteChildren = {
+  OrgSlugSettingsOrganizationRoute: OrgSlugSettingsOrganizationRoute,
+  OrgSlugSettingsProfileRoute: OrgSlugSettingsProfileRoute,
+  OrgSlugSettingsIndexRoute: OrgSlugSettingsIndexRoute,
 }
 
-const _authenticatedOrgSlugRouteChildren: _authenticatedOrgSlugRouteChildren = {
-  _authenticatedOrgSlugBillingRoute: _authenticatedOrgSlugBillingRoute,
-  _authenticatedOrgSlugDomainsRoute: _authenticatedOrgSlugDomainsRoute,
-  _authenticatedOrgSlugInstallRoute: _authenticatedOrgSlugInstallRoute,
-  _authenticatedOrgSlugMembersRoute: _authenticatedOrgSlugMembersRoute,
-  _authenticatedOrgSlugRequestsRoute: _authenticatedOrgSlugRequestsRoute,
-  _authenticatedOrgSlugSettingsRoute:
-    _authenticatedOrgSlugSettingsRouteWithChildren,
-  _authenticatedOrgSlugSubdomainsRoute: _authenticatedOrgSlugSubdomainsRoute,
-  _authenticatedOrgSlugTokensRoute: _authenticatedOrgSlugTokensRoute,
-  _authenticatedOrgSlugIndexRoute: _authenticatedOrgSlugIndexRoute,
-  _authenticatedOrgSlugTunnelsTunnelIdRoute:
-    _authenticatedOrgSlugTunnelsTunnelIdRoute,
-  _authenticatedOrgSlugTunnelsIndexRoute:
-    _authenticatedOrgSlugTunnelsIndexRoute,
-}
-
-const _authenticatedOrgSlugRouteWithChildren =
-  _authenticatedOrgSlugRoute._addFileChildren(
-    _authenticatedOrgSlugRouteChildren,
-  )
-
-interface _authenticatedRouteChildren {
-  _authenticatedOrgSlugRoute: typeof _authenticatedOrgSlugRouteWithChildren
-  _authenticatedOnboardingRoute: typeof _authenticatedOnboardingRoute
-}
-
-const _authenticatedRouteChildren: _authenticatedRouteChildren = {
-  _authenticatedOrgSlugRoute: _authenticatedOrgSlugRouteWithChildren,
-  _authenticatedOnboardingRoute: _authenticatedOnboardingRoute,
-}
-
-const _authenticatedRouteWithChildren = _authenticatedRoute._addFileChildren(
-  _authenticatedRouteChildren,
+const OrgSlugSettingsRouteWithChildren = OrgSlugSettingsRoute._addFileChildren(
+  OrgSlugSettingsRouteChildren,
 )
+
+interface OrgSlugRouteChildren {
+  OrgSlugBillingRoute: typeof OrgSlugBillingRoute
+  OrgSlugDomainsRoute: typeof OrgSlugDomainsRoute
+  OrgSlugInstallRoute: typeof OrgSlugInstallRoute
+  OrgSlugMembersRoute: typeof OrgSlugMembersRoute
+  OrgSlugRequestsRoute: typeof OrgSlugRequestsRoute
+  OrgSlugSettingsRoute: typeof OrgSlugSettingsRouteWithChildren
+  OrgSlugSubdomainsRoute: typeof OrgSlugSubdomainsRoute
+  OrgSlugTokensRoute: typeof OrgSlugTokensRoute
+  OrgSlugIndexRoute: typeof OrgSlugIndexRoute
+  OrgSlugTunnelsTunnelIdRoute: typeof OrgSlugTunnelsTunnelIdRoute
+  OrgSlugTunnelsIndexRoute: typeof OrgSlugTunnelsIndexRoute
+}
+
+const OrgSlugRouteChildren: OrgSlugRouteChildren = {
+  OrgSlugBillingRoute: OrgSlugBillingRoute,
+  OrgSlugDomainsRoute: OrgSlugDomainsRoute,
+  OrgSlugInstallRoute: OrgSlugInstallRoute,
+  OrgSlugMembersRoute: OrgSlugMembersRoute,
+  OrgSlugRequestsRoute: OrgSlugRequestsRoute,
+  OrgSlugSettingsRoute: OrgSlugSettingsRouteWithChildren,
+  OrgSlugSubdomainsRoute: OrgSlugSubdomainsRoute,
+  OrgSlugTokensRoute: OrgSlugTokensRoute,
+  OrgSlugIndexRoute: OrgSlugIndexRoute,
+  OrgSlugTunnelsTunnelIdRoute: OrgSlugTunnelsTunnelIdRoute,
+  OrgSlugTunnelsIndexRoute: OrgSlugTunnelsIndexRoute,
+}
+
+const OrgSlugRouteWithChildren =
+  OrgSlugRoute._addFileChildren(OrgSlugRouteChildren)
 
 interface ApiCliLoginRouteChildren {
   ApiCliLoginStatusRoute: typeof ApiCliLoginStatusRoute
@@ -1365,10 +1329,12 @@ const ApiOrgSlugTunnelsTunnelIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  _authenticatedRoute: _authenticatedRouteWithChildren,
+  OrgSlugRoute: OrgSlugRouteWithChildren,
+  _authenticatedRoute: _authenticatedRoute,
   AdminRoute: AdminRoute,
   EmailTemplatesRoute: EmailTemplatesRoute,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
   SelectRoute: SelectRoute,
   SignupRoute: SignupRoute,

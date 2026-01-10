@@ -11,7 +11,7 @@ import { DomainCard } from "@/components/domains/domain-card";
 import { LimitModal } from "@/components/limit-modal";
 import { AlertModal } from "@/components/alert-modal";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/domains")({
+export const Route = createFileRoute("/$orgSlug/domains")({
   component: DomainsView,
 });
 

@@ -10,7 +10,7 @@ import { authClient } from "@/lib/auth-client";
 import { Sidebar } from "@/components/app-sidebar";
 import { ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug")({
+export const Route = createFileRoute("/$orgSlug")({
   component: DashboardLayout,
 });
 

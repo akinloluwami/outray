@@ -9,7 +9,7 @@ import { CreateTokenModal } from "@/components/create-token-modal";
 import { ConfirmModal } from "@/components/confirm-modal";
 import { appClient } from "@/lib/app-client";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/tokens")({
+export const Route = createFileRoute("/$orgSlug/tokens")({
   component: TokensSettingsView,
 });
 

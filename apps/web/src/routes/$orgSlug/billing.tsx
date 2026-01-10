@@ -13,7 +13,7 @@ import { useState } from "react";
 import { AlertModal } from "@/components/alert-modal";
 import { appClient } from "@/lib/app-client";
 
-export const Route = createFileRoute("/__authenticated/$orgSlug/billing")({
+export const Route = createFileRoute("/$orgSlug/billing")({
   component: BillingView,
   validateSearch: (search?: Record<string, unknown>): { success?: boolean } => {
     return {
