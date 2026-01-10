@@ -16,7 +16,6 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EmailTemplatesRouteImport } from './routes/email-templates'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as _authenticatedRouteImport } from './routes/__authenticated'
 import { Route as OrgSlugRouteImport } from './routes/$orgSlug'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgSlugIndexRouteImport } from './routes/$orgSlug/index'
@@ -104,10 +103,6 @@ const EmailTemplatesRoute = EmailTemplatesRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const _authenticatedRoute = _authenticatedRouteImport.update({
-  id: '/__authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrgSlugRoute = OrgSlugRouteImport.update({
@@ -513,7 +508,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$orgSlug': typeof OrgSlugRouteWithChildren
-  '/__authenticated': typeof _authenticatedRoute
   '/admin': typeof AdminRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
@@ -700,7 +694,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$orgSlug'
-    | '/__authenticated'
     | '/admin'
     | '/email-templates'
     | '/login'
@@ -764,7 +757,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OrgSlugRoute: typeof OrgSlugRouteWithChildren
-  _authenticatedRoute: typeof _authenticatedRoute
   AdminRoute: typeof AdminRoute
   EmailTemplatesRoute: typeof EmailTemplatesRoute
   LoginRoute: typeof LoginRoute
@@ -857,13 +849,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/__authenticated': {
-      id: '/__authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof _authenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$orgSlug': {
@@ -1330,7 +1315,6 @@ const ApiOrgSlugTunnelsTunnelIdRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OrgSlugRoute: OrgSlugRouteWithChildren,
-  _authenticatedRoute: _authenticatedRoute,
   AdminRoute: AdminRoute,
   EmailTemplatesRoute: EmailTemplatesRoute,
   LoginRoute: LoginRoute,

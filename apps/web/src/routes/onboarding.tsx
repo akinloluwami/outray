@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import { authClient } from "@/lib/auth-client";
 import { appClient } from "@/lib/app-client";
@@ -26,21 +26,7 @@ function Onboarding() {
   const { data: sessionData, isPending: sessionPending } =
     authClient.useSession();
 
-  useEffect(() => {
-    if (!sessionPending && !sessionData?.session.id) {
-      navigate({ to: "/login" });
-    }
-  }, [sessionPending, sessionData?.session.id, navigate]);
-
-  if (sessionPending || !sessionData?.session.id) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center">
-        <img src="/logo.png" alt="OutRay" className="w-16 h-16 animate-pulse" />
-      </div>
-    );
-  }
-
-  const validateSlug = (value: string) => {
+  const validateSlug = useCallback((value: string) => {
     if (!/^[a-z0-9-]+$/.test(value)) {
       return "Slug can only contain lowercase letters, numbers, and hyphens.";
     }
@@ -51,44 +37,47 @@ function Onboarding() {
       return "Slug cannot start or end with a hyphen.";
     }
     return null;
-  };
+  }, []);
 
-  const checkSlugAvailability = useCallback(async (slugToCheck: string) => {
-    if (!slugToCheck) {
-      setIsSlugAvailable(null);
-      return;
-    }
-
-    const validationError = validateSlug(slugToCheck);
-    if (validationError) {
-      setIsSlugAvailable(false);
-      setError(validationError);
-      return;
-    }
-
-    setIsCheckingSlug(true);
-    try {
-      const data = await appClient.organizations.checkSlug(slugToCheck);
-
-      if ("error" in data) {
-        setIsSlugAvailable(false);
-        setError(data.error || "Failed to check slug availability.");
+  const checkSlugAvailability = useCallback(
+    async (slugToCheck: string) => {
+      if (!slugToCheck) {
+        setIsSlugAvailable(null);
         return;
       }
 
-      if (data.available) {
-        setIsSlugAvailable(true);
-        setError(null);
-      } else {
+      const validationError = validateSlug(slugToCheck);
+      if (validationError) {
         setIsSlugAvailable(false);
-        setError("This slug is already taken.");
+        setError(validationError);
+        return;
       }
-    } catch (error) {
-      console.error("Failed to check slug:", error);
-    } finally {
-      setIsCheckingSlug(false);
-    }
-  }, []);
+
+      setIsCheckingSlug(true);
+      try {
+        const data = await appClient.organizations.checkSlug(slugToCheck);
+
+        if ("error" in data) {
+          setIsSlugAvailable(false);
+          setError(data.error || "Failed to check slug availability.");
+          return;
+        }
+
+        if (data.available) {
+          setIsSlugAvailable(true);
+          setError(null);
+        } else {
+          setIsSlugAvailable(false);
+          setError("This slug is already taken.");
+        }
+      } catch (error) {
+        console.error("Failed to check slug:", error);
+      } finally {
+        setIsCheckingSlug(false);
+      }
+    },
+    [validateSlug],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -102,6 +91,18 @@ function Onboarding() {
 
     return () => clearTimeout(timer);
   }, [slug, checkSlugAvailability]);
+
+  if (sessionPending) {
+    return (
+      <div className="fixed inset-0 bg-black flex items-center justify-center">
+        <img src="/logo.png" alt="OutRay" className="w-16 h-16 animate-pulse" />
+      </div>
+    );
+  }
+
+  if (!sessionData?.session.id) {
+    return <Navigate to="/login" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -304,5 +305,5 @@ function Onboarding() {
         </p>
       </div>
     </div>
-  )
+  );
 }
