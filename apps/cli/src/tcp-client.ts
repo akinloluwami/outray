@@ -66,7 +66,7 @@ export class TCPTunnelClient {
   }
 
   private connect(): void {
-    console.log(chalk.cyan("✨ Connecting to OutRay (TCP mode)..."));
+    console.log(chalk.cyan("Connecting to OutRay (TCP mode)..."));
 
     this.ws = new WebSocket(this.serverUrl);
 
@@ -82,7 +82,7 @@ export class TCPTunnelClient {
   }
 
   private handleOpen(): void {
-    console.log(chalk.green(`🔌 Linked to your local port ${this.localPort}`));
+    console.log(chalk.green(`Linked to your local port ${this.localPort}`));
     this.startPing();
 
     const handshake = encodeMessage({
@@ -100,11 +100,13 @@ export class TCPTunnelClient {
 
       if (message.type === "tunnel_opened") {
         this.assignedPort = message.port || null;
-        console.log(chalk.magenta(`🌐 TCP Tunnel ready: ${message.url}`));
+        console.log(chalk.magenta(`TCP Tunnel ready: ${message.url}`));
         if (this.assignedPort) {
-          console.log(chalk.cyan(`📡 Remote port: ${this.assignedPort}`));
+          console.log(chalk.cyan(`Remote port: ${this.assignedPort}`));
         }
-        console.log(chalk.yellow("🥹 Don't close this or I'll cry softly."));
+        console.log(
+          chalk.yellow("Keep this running to keep your tunnel active."),
+        );
       } else if (message.type === "error") {
         const lowerMessage = message.message.toLowerCase();
         const isPortInUse =
@@ -270,7 +272,7 @@ export class TCPTunnelClient {
       process.exit(0);
     }
 
-    console.log(chalk.yellow("😵 Disconnected from OutRay. Retrying in 2s…"));
+    console.log(chalk.yellow("Disconnected from OutRay. Retrying in 2s…"));
 
     this.reconnectTimeout = setTimeout(() => {
       this.connect();

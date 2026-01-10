@@ -99,21 +99,21 @@ export function Terminal() {
 
         {step >= 1 && (
           <p className="text-cyan-400">
-            ✨ Connecting to OutRay{step === 1 ? dots : "..."}
+            Connecting to OutRay{step === 1 ? dots : "..."}
           </p>
         )}
 
         {step >= 2 && (
-          <p className="text-green-400">🔌 Linked to your local port 6967</p>
+          <p className="text-green-400">Linked to your local port 6967</p>
         )}
 
         {step >= 3 && (
           <div className="space-y-2">
             <p className="text-fuchsia-400">
-              🌐 Tunnel ready: https://tunnel.outray.app
+              Tunnel ready: https://tunnel.outray.app
             </p>
             <p className="text-yellow-400">
-              🥹 Don't close this or I'll cry softly.
+              Keep this running to keep your tunnel active.
             </p>
             <div className="pt-4 space-y-1">
               {logs.map((log, i) => (

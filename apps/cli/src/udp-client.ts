@@ -60,7 +60,7 @@ export class UDPTunnelClient {
   }
 
   private connect(): void {
-    console.log(chalk.cyan("✨ Connecting to OutRay (UDP mode)..."));
+    console.log(chalk.cyan("Connecting to OutRay (UDP mode)..."));
 
     // Create local UDP socket for forwarding
     this.socket = dgram.createSocket("udp4");
@@ -79,7 +79,7 @@ export class UDPTunnelClient {
   }
 
   private handleOpen(): void {
-    console.log(chalk.green(`🔌 Linked to your local port ${this.localPort}`));
+    console.log(chalk.green(`Linked to your local port ${this.localPort}`));
     this.startPing();
 
     const handshake = encodeMessage({
@@ -97,11 +97,13 @@ export class UDPTunnelClient {
 
       if (message.type === "tunnel_opened") {
         this.assignedPort = message.port || null;
-        console.log(chalk.magenta(`🌐 UDP Tunnel ready: ${message.url}`));
+        console.log(chalk.magenta(`UDP Tunnel ready: ${message.url}`));
         if (this.assignedPort) {
-          console.log(chalk.cyan(`📡 Remote port: ${this.assignedPort}`));
+          console.log(chalk.cyan(`Remote port: ${this.assignedPort}`));
         }
-        console.log(chalk.yellow("🥹 Don't close this or I'll cry softly."));
+        console.log(
+          chalk.yellow("Keep this running to keep your tunnel active."),
+        );
       } else if (message.type === "error") {
         const lowerMessage = message.message.toLowerCase();
         const isPortInUse =
@@ -216,7 +218,7 @@ export class UDPTunnelClient {
       process.exit(0);
     }
 
-    console.log(chalk.yellow("😵 Disconnected from OutRay. Retrying in 2s…"));
+    console.log(chalk.yellow("Disconnected from OutRay. Retrying in 2s…"));
 
     this.reconnectTimeout = setTimeout(() => {
       this.connect();
