@@ -2,8 +2,8 @@ import { IncomingMessage, ServerResponse } from "http";
 import fs from "fs";
 import path from "path";
 import { TunnelRouter } from "./TunnelRouter";
-import { getBandwidthKey } from "../../../../shared/utils";
-import { logger } from "../lib/tigerdata";
+import { getBandwidthKey, generateId } from "../../../../shared/utils";
+import { logger, requestCaptureLogger } from "../lib/tigerdata";
 import { LogManager } from "./LogManager";
 
 export class HTTPProxy {
@@ -144,6 +144,51 @@ export class HTTPProxy {
 
         logger.log(event);
         this.logManager.addLog(event);
+
+        // Capture full request/response data if enabled
+        if (metadata.fullCaptureEnabled) {
+          const captureId = generateId("capture");
+          const maxBodySize = 1024 * 1024; // 1MB limit
+          
+          // Prepare request body (truncate if too large)
+          let requestBody: string | null = null;
+          let requestBodySize = bodyBuffer.length;
+          if (bodyBuffer.length > 0) {
+            if (bodyBuffer.length <= maxBodySize) {
+              requestBody = bodyBuffer.toString("base64");
+            } else {
+              requestBody = bodyBuffer.subarray(0, maxBodySize).toString("base64");
+            }
+          }
+
+          // Prepare response body (truncate if too large)
+          let responseBody: string | null = null;
+          let responseBodySize = responseSize;
+          if (responseBuffer && responseBuffer.length > 0) {
+            if (responseBuffer.length <= maxBodySize) {
+              responseBody = responseBuffer.toString("base64");
+            } else {
+              responseBody = responseBuffer.subarray(0, maxBodySize).toString("base64");
+              responseBodySize = maxBodySize;
+            }
+          }
+
+          const requestCapture = {
+            id: captureId,
+            timestamp: Date.now(),
+            tunnel_id: metadata.dbTunnelId || tunnelId,
+            organization_id: metadata.organizationId,
+            retention_days: metadata.retentionDays || 3,
+            request_headers: headers,
+            request_body: requestBody,
+            request_body_size: requestBodySize,
+            response_headers: response.headers || {},
+            response_body: responseBody,
+            response_body_size: responseBodySize,
+          };
+
+          requestCaptureLogger.log(requestCapture);
+        }
       }
     } catch (error) {
       if (error instanceof Error && error.message === "Tunnel disconnected") {
