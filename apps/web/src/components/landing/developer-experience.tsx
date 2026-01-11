@@ -86,9 +86,9 @@ export const DeveloperExperience = () => {
         </h2>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="space-y-8">
-          <div className="bg-white/2 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors group">
+      <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+        <div className="grid gap-8 lg:grid-rows-2">
+          <div className="bg-white/2 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors group h-full flex flex-col">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                 <TerminalIcon size={20} className="text-accent" />
@@ -100,12 +100,12 @@ export const DeveloperExperience = () => {
             <p className="text-white/40 mb-6">
               One command, you're online. Seriously, try for yourself.
             </p>
-            <div className="bg-black/40 rounded-2xl border border-white/5 p-4 font-mono text-sm">
+            <div className="bg-black/40 rounded-2xl border border-white/5 p-4 font-mono text-sm mt-auto">
               <span className="text-accent">$</span> outray 3000
             </div>
           </div>
 
-          <div className="bg-white/2 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors group">
+          <div className="bg-white/2 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors group h-full flex flex-col">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                 <Code size={20} className="text-accent" />
@@ -120,7 +120,7 @@ export const DeveloperExperience = () => {
             <p className="text-white/40 mb-6">
               Use our SDKs to embed OutRay directly into your app.
             </p>
-            <div className="bg-black/40 rounded-2xl border border-white/5 p-4 font-mono text-sm overflow-x-auto">
+            <div className="bg-black/40 rounded-2xl border border-white/5 p-4 font-mono text-sm overflow-x-auto mt-auto">
               <span className="text-accent">import</span> outray{" "}
               <span className="text-accent">from</span>{" "}
               <span className="text-white/60">"outray"</span>;{"\n"}
@@ -131,10 +131,10 @@ export const DeveloperExperience = () => {
           </div>
         </div>
 
-        <div className="bg-white/2 border border-white/5 rounded-3xl p-8 flex flex-col relative overflow-hidden group">
+        <div className="bg-white/2 border border-white/5 rounded-3xl p-8 flex flex-col relative overflow-hidden group h-full">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none group-hover:bg-accent/20 transition-colors" />
 
-          <div className="mb-8">
+          <div>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                 <Activity size={20} className="text-accent" />
@@ -149,7 +149,7 @@ export const DeveloperExperience = () => {
             </p>
           </div>
 
-          <div className="mt-auto space-y-3 font-mono text-xs min-h-96 flex flex-col justify-end">
+          <div className="mt-8 space-y-3 font-mono text-xs flex-1 flex flex-col justify-end">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleLogs.map((log) => (
                 <motion.div
