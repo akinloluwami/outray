@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { requireOrgFromSlug } from "../../../../lib/org";
 
+// Maximum allowed request body size (10MB)
+const MAX_BODY_SIZE = 10 * 1024 * 1024;
+
 export const Route = createFileRoute("/api/$orgSlug/requests/replay")({
   server: {
     handlers: {
@@ -9,6 +12,15 @@ export const Route = createFileRoute("/api/$orgSlug/requests/replay")({
         try {
           const orgResult = await requireOrgFromSlug(request, params.orgSlug);
           if ("error" in orgResult) return orgResult.error;
+
+          // Check Content-Length header to prevent DoS attacks
+          const contentLength = request.headers.get("content-length");
+          if (contentLength && parseInt(contentLength) > MAX_BODY_SIZE) {
+            return json(
+              { error: `Request body too large. Maximum size is ${MAX_BODY_SIZE / 1024 / 1024}MB` },
+              { status: 413 }
+            );
+          }
 
           const body = await request.json();
           const { url, method, headers, requestBody } = body;
@@ -18,6 +30,19 @@ export const Route = createFileRoute("/api/$orgSlug/requests/replay")({
               { error: "url and method are required" },
               { status: 400 }
             );
+          }
+
+          // Validate requestBody size to prevent memory exhaustion
+          if (requestBody) {
+            const bodySize = typeof requestBody === 'string' 
+              ? Buffer.byteLength(requestBody, 'utf8')
+              : JSON.stringify(requestBody).length;
+            if (bodySize > MAX_BODY_SIZE) {
+              return json(
+                { error: `Request body too large. Maximum size is ${MAX_BODY_SIZE / 1024 / 1024}MB` },
+                { status: 413 }
+              );
+            }
           }
 
           const startTime = Date.now();
