@@ -80,7 +80,7 @@ export function generateCurl(req: TunnelEvent, requestDetails?: RequestDetails):
   
   // Add body if present
   if (details.body) {
-    curl += ` \\\n  -d '${details.body.replace(/'/g, "'\\''")}''`;
+    curl += ` \\\n  -d '${details.body.replace(/'/g, "'\\''")}'`;
   }
   
   return curl;
