@@ -43,7 +43,7 @@ export const Route = createFileRoute("/api/admin/users")({
 
           // Get total count
           const [totalResult] = await db
-            .select({ count: count() })
+            .select({ count: sql<number>`cast(count(${users.id}) as integer)` })
             .from(users)
             .where(searchCondition);
 
