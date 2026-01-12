@@ -15,7 +15,7 @@ export const Route = createFileRoute("/api/$orgSlug/requests/replay")({
 
           // Check Content-Length header to prevent DoS attacks
           const contentLength = request.headers.get("content-length");
-          if (contentLength && parseInt(contentLength) > MAX_BODY_SIZE) {
+          if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
             return json(
               { error: `Request body too large. Maximum size is ${MAX_BODY_SIZE / 1024 / 1024}MB` },
               { status: 413 }
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/$orgSlug/requests/replay")({
           if (requestBody) {
             const bodySize = typeof requestBody === 'string' 
               ? Buffer.byteLength(requestBody, 'utf8')
-              : JSON.stringify(requestBody).length;
+              : Buffer.byteLength(JSON.stringify(requestBody), 'utf8');
             if (bodySize > MAX_BODY_SIZE) {
               return json(
                 { error: `Request body too large. Maximum size is ${MAX_BODY_SIZE / 1024 / 1024}MB` },
