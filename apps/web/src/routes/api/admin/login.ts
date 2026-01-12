@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { randomUUID } from "crypto";
 import { redis } from "../../../lib/redis";
+import { hashToken } from "../../../lib/hash";
 
 const PASSPHRASE = process.env.ADMIN_PASSPHRASE;
 const TOKEN_TTL_SECONDS = 60 * 60; // 1h
@@ -34,7 +35,8 @@ export const Route = createFileRoute("/api/admin/login")({
         }
 
         const token = randomUUID();
-        await redis.set(`admin:token:${token}`, "1", "EX", TOKEN_TTL_SECONDS);
+        const tokenHash = hashToken(token);
+        await redis.set(`admin:token:${tokenHash}`, "1", "EX", TOKEN_TTL_SECONDS);
 
         return json({ token, expiresIn: TOKEN_TTL_SECONDS });
       },

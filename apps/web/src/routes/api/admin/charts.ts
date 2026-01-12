@@ -3,6 +3,7 @@ import { json } from "@tanstack/react-start";
 import { db } from "../../../db";
 import { users, organizations, tunnels, subscriptions } from "../../../db/schema";
 import { redis } from "../../../lib/redis";
+import { hashToken } from "../../../lib/hash";
 import { sql, count, gte, desc, eq } from "drizzle-orm";
 import { tigerData } from "../../../lib/tigerdata";
 
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/api/admin/charts")({
           return json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const tokenKey = `admin:token:${token}`;
+        const tokenKey = `admin:token:${hashToken(token)}`;
         const exists = await redis.get(tokenKey);
         if (!exists) {
           return json({ error: "Forbidden" }, { status: 403 });

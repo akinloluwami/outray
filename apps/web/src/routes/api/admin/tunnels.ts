@@ -3,6 +3,7 @@ import { json } from "@tanstack/react-start";
 import { db } from "../../../db";
 import { tunnels, users, organizations } from "../../../db/schema";
 import { redis } from "../../../lib/redis";
+import { hashToken } from "../../../lib/hash";
 import { sql, count, desc, like, or, eq, inArray } from "drizzle-orm";
 
 export const Route = createFileRoute("/api/admin/tunnels")({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/api/admin/tunnels")({
           return json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const tokenKey = `admin:token:${token}`;
+        const tokenKey = `admin:token:${hashToken(token)}`;
         const exists = await redis.get(tokenKey);
         if (!exists) {
           return json({ error: "Forbidden" }, { status: 403 });
