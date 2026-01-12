@@ -3,7 +3,7 @@ import { json } from "@tanstack/react-start";
 import { db } from "../../../db";
 import { organizations, members, tunnels, subscriptions } from "../../../db/schema";
 import { redis } from "../../../lib/redis";
-import { sql, count, desc, like, or } from "drizzle-orm";
+import { count, desc, like, or, inArray, gte, and } from "drizzle-orm";
 
 export const Route = createFileRoute("/api/admin/organizations")({
   server: {
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/api/admin/organizations")({
                     count: count(),
                   })
                   .from(members)
-                  .where(sql`${members.organizationId} IN ${orgIds}`)
+                  .where(inArray(members.organizationId, orgIds))
                   .groupBy(members.organizationId)
               : [];
 
@@ -91,7 +91,10 @@ export const Route = createFileRoute("/api/admin/organizations")({
                   })
                   .from(tunnels)
                   .where(
-                    sql`${tunnels.organizationId} IN ${orgIds} AND ${tunnels.lastSeenAt} >= ${fiveMinutesAgo}`
+                    and(
+                      inArray(tunnels.organizationId, orgIds),
+                      gte(tunnels.lastSeenAt, fiveMinutesAgo)
+                    )
                   )
                   .groupBy(tunnels.organizationId)
               : [];
@@ -110,7 +113,7 @@ export const Route = createFileRoute("/api/admin/organizations")({
                     status: subscriptions.status,
                   })
                   .from(subscriptions)
-                  .where(sql`${subscriptions.organizationId} IN ${orgIds}`)
+                  .where(inArray(subscriptions.organizationId, orgIds))
               : [];
 
           const subscriptionMap = new Map(
