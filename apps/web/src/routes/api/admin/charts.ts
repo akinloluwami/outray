@@ -89,7 +89,10 @@ export const Route = createFileRoute("/api/admin/charts")({
               requests: Number(r.requests) || 0,
             }));
           } catch (e) {
-            // TimescaleDB might not be available
+            // TimescaleDB might not be available; log in non-production for debugging
+            if (process.env.NODE_ENV !== "production") {
+              console.error("Failed to fetch hourly request activity from TimescaleDB:", e);
+            }
           }
 
           // User verification status
