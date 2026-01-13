@@ -1,17 +1,14 @@
 interface PlanUsageProps {
   activeTunnelsCount: number;
-  isCollapsed: boolean;
   limit: number;
   currentPlan: string;
 }
 
 export function PlanUsage({
   activeTunnelsCount,
-  isCollapsed,
   limit,
   currentPlan,
 }: PlanUsageProps) {
-  if (isCollapsed) return null;
 
   const percentage =
     limit === -1 ? 0 : Math.min(100, (activeTunnelsCount / limit) * 100);
