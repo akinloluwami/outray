@@ -726,6 +726,7 @@ async function main() {
       "localhost",
       remotePort,
       ipAllowlist,
+      noLogs
     );
   } else if (tunnelProtocol === "udp") {
     client = new UDPTunnelClient(
@@ -735,6 +736,7 @@ async function main() {
       "localhost",
       remotePort,
       ipAllowlist,
+      noLogs
     );
   } else {
     client = new OutRayClient(
@@ -744,6 +746,7 @@ async function main() {
       subdomain,
       customDomain,
       ipAllowlist,
+      noLogs
     );
   }
 
