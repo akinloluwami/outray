@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { db } from "../../../../db";
 import { subdomains } from "../../../../db/app-schema";
@@ -50,50 +50,74 @@ export const Route = createFileRoute("/api/$orgSlug/subdomains/")({
           );
         }
 
-        const [subscription] = await db
-          .select()
-          .from(subscriptions)
-          .where(eq(subscriptions.organizationId, organization.id));
+        // Use a transaction with row-level locking to prevent race conditions
+        // This ensures atomic check-and-insert to enforce subdomain limits
+        try {
+          const result = await db.transaction(async (tx) => {
+            // Lock the organization's subscription row to serialize concurrent requests
+            const [subscription] = await tx
+              .select()
+              .from(subscriptions)
+              .where(eq(subscriptions.organizationId, organization.id))
+              .for("update");
 
-        const currentPlan = subscription?.plan || "free";
-        const planLimits = getPlanLimits(currentPlan as any);
-        const subdomainLimit = planLimits.maxSubdomains;
+            const currentPlan = subscription?.plan || "free";
+            const planLimits = getPlanLimits(currentPlan as any);
+            const subdomainLimit = planLimits.maxSubdomains;
 
-        const existingSubdomains = await db
-          .select()
-          .from(subdomains)
-          .where(eq(subdomains.organizationId, organization.id));
+            // Count existing subdomains with a locked read to prevent phantom reads
+            const [countResult] = await tx
+              .select({ count: sql<number>`count(*)::int` })
+              .from(subdomains)
+              .where(eq(subdomains.organizationId, organization.id))
+              .for("update");
 
-        if (existingSubdomains.length >= subdomainLimit) {
-          return json(
-            {
-              error: `Subdomain limit reached. The ${currentPlan} plan allows ${subdomainLimit} subdomain${subdomainLimit > 1 ? "s" : ""}.`,
-            },
-            { status: 403 },
-          );
+            const existingCount = countResult?.count ?? 0;
+
+            if (existingCount >= subdomainLimit) {
+              return {
+                error: `Subdomain limit reached. The ${currentPlan} plan allows ${subdomainLimit} subdomain${subdomainLimit > 1 ? "s" : ""}.`,
+                status: 403,
+              };
+            }
+
+            // Check if subdomain is already taken (unique constraint also enforces this)
+            const existing = await tx
+              .select()
+              .from(subdomains)
+              .where(eq(subdomains.subdomain, subdomain))
+              .limit(1)
+              .for("update");
+
+            if (existing.length > 0) {
+              return { error: "Subdomain already taken", status: 409 };
+            }
+
+            const [newSubdomain] = await tx
+              .insert(subdomains)
+              .values({
+                id: crypto.randomUUID(),
+                subdomain,
+                organizationId: organization.id,
+                userId: session.user.id,
+              })
+              .returning();
+
+            return { subdomain: newSubdomain };
+          });
+
+          if ("error" in result) {
+            return json({ error: result.error }, { status: result.status });
+          }
+
+          return json({ subdomain: result.subdomain });
+        } catch (error: any) {
+          // Handle unique constraint violation (race condition fallback)
+          if (error?.code === "23505") {
+            return json({ error: "Subdomain already taken" }, { status: 409 });
+          }
+          throw error;
         }
-
-        const existing = await db
-          .select()
-          .from(subdomains)
-          .where(eq(subdomains.subdomain, subdomain))
-          .limit(1);
-
-        if (existing.length > 0) {
-          return json({ error: "Subdomain already taken" }, { status: 409 });
-        }
-
-        const [newSubdomain] = await db
-          .insert(subdomains)
-          .values({
-            id: crypto.randomUUID(),
-            subdomain,
-            organizationId: organization.id,
-            userId: session.user.id,
-          })
-          .returning();
-
-        return json({ subdomain: newSubdomain });
       },
     },
   },
