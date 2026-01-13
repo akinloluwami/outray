@@ -48,23 +48,28 @@ function SubdomainsView() {
   const createMutation = useMutation({
     mutationFn: async (subdomain: string) => {
       if (!orgSlug) throw new Error("No active organization");
-      return appClient.subdomains.create({
+      const response = await appClient.subdomains.create({
         subdomain,
         orgSlug,
       });
-    },
-    onSuccess: (data) => {
-      if ("error" in data) {
-        setError(data.error);
-      } else {
-        setIsCreating(false);
-        queryClient.invalidateQueries({ queryKey: ["subdomains", orgSlug] });
+      if ("error" in response || "message" in response) {
+        const errorMsg = (response as any).error || (response as any).message || "Failed to create subdomain";
+        throw new Error(errorMsg);
       }
+      return response;
     },
-    onError: () => {
-      setError("Failed to create subdomain");
+    onSuccess: () => {
+      setIsCreating(false);
+      setError(null);
+      queryClient.invalidateQueries({ queryKey: ["subdomains", orgSlug] });
+    },
+    onError: (err: Error) => {
+      setError(err.message || "Failed to create subdomain");
     },
   });
+
+  // Keep modal open when there's an error
+  const modalError = createMutation.isError ? (createMutation.error?.message || "Failed to create subdomain") : error;
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -83,8 +88,8 @@ function SubdomainsView() {
 
   const currentSubdomainCount = subdomains.length;
   const subdomainLimit = planLimits.maxSubdomains;
-  const isAtLimit = currentSubdomainCount >= subdomainLimit;
-  const isUnlimited = false;
+  const isUnlimited = subdomainLimit === -1;
+  const isAtLimit = !isUnlimited && currentSubdomainCount >= subdomainLimit;
 
   const handleAddSubdomainClick = () => {
     if (isAtLimit) {
@@ -144,10 +149,14 @@ function SubdomainsView() {
 
       <CreateSubdomainModal
         isOpen={isCreating}
-        onClose={() => setIsCreating(false)}
+        onClose={() => {
+          setIsCreating(false);
+          setError(null);
+          createMutation.reset();
+        }}
         onCreate={(subdomain) => createMutation.mutate(subdomain)}
         isPending={createMutation.isPending}
-        error={error}
+        error={modalError}
         setError={setError}
       />
 
