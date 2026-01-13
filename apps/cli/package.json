@@ -9,7 +9,20 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "build:binaries": "npm run build && pkg . --compress GZip",
     "prepublishOnly": "npm run build"
+  },
+  "pkg": {
+    "targets": [
+      "node18-macos-x64",
+      "node18-macos-arm64",
+      "node18-linux-x64",
+      "node18-win-x64"
+    ],
+    "outputPath": "bin",
+    "assets": [
+      "config.toml.example"
+    ]
   },
   "keywords": [
     "tunnel",
@@ -52,6 +65,7 @@
     "@types/http-proxy": "^1.17.14",
     "@types/node": "^20.10.0",
     "@types/ws": "^8.5.10",
+    "pkg": "^5.8.1",
     "typescript": "^5.3.3"
   }
 }
