@@ -74,7 +74,7 @@ export const Route = createFileRoute("/api/$orgSlug/subdomains/")({
 
             const existingCount = countResult?.count ?? 0;
 
-            if (existingCount >= subdomainLimit) {
+            if (subdomainLimit !== -1 && existingCount >= subdomainLimit) {
               return {
                 error: `Subdomain limit reached. The ${currentPlan} plan allows ${subdomainLimit} subdomain${subdomainLimit > 1 ? "s" : ""}.`,
                 status: 403,
