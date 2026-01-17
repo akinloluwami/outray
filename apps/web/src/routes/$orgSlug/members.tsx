@@ -18,7 +18,7 @@ import { LimitModal } from "@/components/limit-modal";
 import { ConfirmModal } from "@/components/confirm-modal";
 import { ChangeRoleModal } from "@/components/change-role-modal";
 import { useEffect, useRef } from "react";
-import InviteMemberModal from "@/components/invite-member-model";
+import InviteMemberModal from "@/components/invite-member-modal";
 
 export const Route = createFileRoute("/$orgSlug/members")({
   component: MembersView,

@@ -11,7 +11,6 @@ interface InviteMemberModalProps {
   setInviteRole: (role: Role) => void;
   inviteMutation: {
     isPending: boolean;
-    mutate: (data: { email: string; role: Role }) => void;
   };
   handleInvite: (e: React.FormEvent) => void;
 }
@@ -104,7 +103,7 @@ export default function InviteMemberModal({
             <div className="relative" ref={dropdownRef}>
               <Shield
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10"
-                size={20}
+                size={18}
               />
 
               {/* Dropdown Button */}
@@ -112,13 +111,17 @@ export default function InviteMemberModal({
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-10 text-white text-left focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer"
+                aria-haspopup="listbox"
+                aria-expanded={isDropdownOpen}
+                aria-labelledby="role-label"
+                aria-controls="role-listbox"
               >
                 {selectedRole?.label}
               </button>
 
               <ChevronDown
                 className={`absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
-                size={20}
+                size={18}
               />
 
               {/* Dropdown Menu */}
@@ -132,7 +135,7 @@ export default function InviteMemberModal({
                         setInviteRole(roleOption.value as Role);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-left hover:bg-accent/5 transition-colors flex items-center justify-between group ${inviteRole === roleOption.value && "bg-accent/10 hover:bg-accent/10"}`}
+                      className={`w-full px-4 py-3 text-left hover:bg-accent/5 transition-colors flex items-center justify-between group ${inviteRole === roleOption.value ? "bg-accent/10 hover:bg-accent/10" : ""}`}
                     >
                       <div className="flex-1">
                         <div className="text-white font-medium">
