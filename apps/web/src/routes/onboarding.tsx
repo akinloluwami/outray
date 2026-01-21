@@ -9,6 +9,8 @@ import {
   XCircle,
   Loader2,
 } from "lucide-react";
+import { useAppStore } from "@/lib/store";
+
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
@@ -23,6 +25,8 @@ function Onboarding() {
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
+  const { setSelectedOrganization } = useAppStore();
+  
   const { data: sessionData, isPending: sessionPending } =
     authClient.useSession();
 
@@ -149,6 +153,8 @@ function Onboarding() {
         await authClient.organization.setActive({
           organizationId: data.id,
         });
+
+        setSelectedOrganization(data);
 
         navigate({ to: "/$orgSlug/install", params: { orgSlug: data.slug } });
       }
