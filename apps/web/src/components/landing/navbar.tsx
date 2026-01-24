@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
+import { LayoutDashboard, LogIn, Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
-import { SiGithub } from "react-icons/si";
+import { SiGithub, SiVite, SiNextdotjs } from "react-icons/si";
 import { GitHubButton } from "./github-button";
 
 export const Navbar = () => {
@@ -10,6 +10,7 @@ export const Navbar = () => {
   const { data: organizations } = authClient.useListOrganizations();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [docsOpen, setDocsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 100);
@@ -53,9 +54,67 @@ export const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
-          <Link to="/docs/$" className="hover:text-white transition-colors">
-            Documentation
-          </Link>
+          <div 
+            className="relative"
+            onMouseEnter={() => setDocsOpen(true)}
+            onMouseLeave={() => setDocsOpen(false)}
+          >
+            <button className="flex items-center gap-1 hover:text-white transition-colors">
+              Docs
+              <ChevronDown size={14} className={`transition-transform ${docsOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {docsOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4">
+                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 min-w-[420px] shadow-2xl">
+                  <div className="flex gap-8">
+                    <div className="flex flex-col gap-3">
+                      <Link 
+                        to="/docs/$" 
+                        params={{ _splat: "" }}
+                        className="text-white/70 hover:text-white transition-colors text-base"
+                      >
+                        Getting Started
+                      </Link>
+                      <Link 
+                        to="/docs/$" 
+                        params={{ _splat: "cli-reference" }}
+                        className="text-white/70 hover:text-white transition-colors text-base"
+                      >
+                        CLI Reference
+                      </Link>
+                      <Link 
+                        to="/docs/$" 
+                        params={{ _splat: "vite-plugin" }}
+                        className="text-white/70 hover:text-white transition-colors text-base"
+                      >
+                        Plugins
+                      </Link>
+                    </div>
+                    
+                    <div className="border-l border-white/10 pl-8">
+                      <div className="grid grid-cols-2 gap-4">
+                        <Link 
+                          to="/vite" 
+                          className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"
+                          title="Vite"
+                        >
+                          <SiVite className="w-6 h-6 text-white/50 group-hover:text-[#646CFF] transition-colors" />
+                        </Link>
+                        <Link 
+                          to="/nextjs" 
+                          className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"
+                          title="Next.js"
+                        >
+                          <SiNextdotjs className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <Link to="/pricing" className="hover:text-white transition-colors">
             Pricing
           </Link>
