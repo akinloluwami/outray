@@ -4,6 +4,11 @@ import { SUBSCRIPTION_PLANS } from "@/lib/subscription-plans";
 import { Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/pricing")({
+  head: () => ({
+    meta: [
+      { title: "Pricing - OutRay" },
+    ],
+  }),
   component: PricingPage,
 });
 
