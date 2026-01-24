@@ -13,7 +13,7 @@ export const Navbar = () => {
   const [docsOpen, setDocsOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Check initial state
     return () => window.removeEventListener("scroll", handleScroll);
@@ -116,6 +116,9 @@ export const Navbar = () => {
           </div>
           <Link to="/pricing" className="hover:text-white transition-colors">
             Pricing
+          </Link>
+          <Link to="/changelog" className="hover:text-white transition-colors">
+            Changelog
           </Link>
         </div>
 
