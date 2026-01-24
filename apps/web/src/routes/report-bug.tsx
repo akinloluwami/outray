@@ -5,6 +5,11 @@ import { Footer } from "@/components/landing/shared";
 import { ArrowRight, CheckCircle2, Loader2, Bug } from "lucide-react";
 
 export const Route = createFileRoute("/report-bug")({
+  head: () => ({
+    meta: [
+      { title: "Report a Bug - OutRay" },
+    ],
+  }),
   component: ReportBugPage,
 });
 
