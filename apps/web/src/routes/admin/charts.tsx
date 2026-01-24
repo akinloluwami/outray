@@ -10,6 +10,11 @@ import { ChartsSkeleton } from "@/components/admin/admin-skeleton";
 import { useAdminStore } from "@/lib/admin-store";
 
 export const Route = createFileRoute("/admin/charts")({
+  head: () => ({
+    meta: [
+      { title: "Admin Charts - OutRay" },
+    ],
+  }),
   component: AdminChartsPage,
 });
 
