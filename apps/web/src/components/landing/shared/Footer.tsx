@@ -38,13 +38,9 @@ export const Footer = () => {
             <h4 className="font-bold text-white mb-4 text-sm">Resources</h4>
             <ul className="space-y-2 text-sm text-white/40">
               <li>
-                <a
-                  href="https://github.com/akinloluwami/outray/blob/main/CHANGELOG.md"
-                  target="_blank"
-                  className="hover:text-white transition-colors"
-                >
+                <Link to="/changelog" className="hover:text-white transition-colors">
                   Changelog
-                </a>
+                </Link>
               </li>
               <li>
                 <Link to="/pricing" className="hover:text-white transition-colors">
