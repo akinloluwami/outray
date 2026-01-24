@@ -20,6 +20,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NextjsRouteImport } from './routes/nextjs'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EmailTemplatesRouteImport } from './routes/email-templates'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as OrgSlugRouteImport } from './routes/$orgSlug'
 import { Route as IndexRouteImport } from './routes/index'
@@ -147,6 +148,11 @@ const LoginRoute = LoginRouteImport.update({
 const EmailTemplatesRoute = EmailTemplatesRouteImport.update({
   id: '/email-templates',
   path: '/email-templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -533,6 +539,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$orgSlug': typeof OrgSlugRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/changelog': typeof ChangelogRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
   '/nextjs': typeof NextjsRoute
@@ -618,6 +625,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/changelog': typeof ChangelogRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
   '/nextjs': typeof NextjsRoute
@@ -704,6 +712,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$orgSlug': typeof OrgSlugRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/changelog': typeof ChangelogRoute
   '/email-templates': typeof EmailTemplatesRoute
   '/login': typeof LoginRoute
   '/nextjs': typeof NextjsRoute
@@ -792,6 +801,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$orgSlug'
     | '/admin'
+    | '/changelog'
     | '/email-templates'
     | '/login'
     | '/nextjs'
@@ -877,6 +887,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/changelog'
     | '/email-templates'
     | '/login'
     | '/nextjs'
@@ -962,6 +973,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$orgSlug'
     | '/admin'
+    | '/changelog'
     | '/email-templates'
     | '/login'
     | '/nextjs'
@@ -1049,6 +1061,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OrgSlugRoute: typeof OrgSlugRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  ChangelogRoute: typeof ChangelogRoute
   EmailTemplatesRoute: typeof EmailTemplatesRoute
   LoginRoute: typeof LoginRoute
   NextjsRoute: typeof NextjsRoute
@@ -1181,6 +1194,13 @@ declare module '@tanstack/react-router' {
       path: '/email-templates'
       fullPath: '/email-templates'
       preLoaderRoute: typeof EmailTemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -1848,6 +1868,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OrgSlugRoute: OrgSlugRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  ChangelogRoute: ChangelogRoute,
   EmailTemplatesRoute: EmailTemplatesRoute,
   LoginRoute: LoginRoute,
   NextjsRoute: NextjsRoute,
