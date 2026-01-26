@@ -19,6 +19,7 @@ import { ConfirmModal } from "@/components/confirm-modal";
 import { ChangeRoleModal } from "@/components/change-role-modal";
 import { useEffect, useRef } from "react";
 import InviteMemberModal from "@/components/invite-member-modal";
+import { Button, IconButton, Badge } from "@/components/ui";
 
 export const Route = createFileRoute("/$orgSlug/members")({
   head: () => ({
@@ -407,17 +408,14 @@ function MembersView() {
           </p>
         </div>
         {canInvite && (
-          <button
+          <Button
             onClick={handleInviteClick}
-            className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-white/5 shrink-0 ${
-              isAtLimit
-                ? "bg-white/10 text-gray-400 cursor-not-allowed"
-                : "bg-white text-black hover:bg-gray-200"
-            }`}
+            disabled={isAtLimit}
+            leftIcon={<Plus size={18} />}
+            className="shrink-0"
           >
-            <Plus size={18} />
             <span className="hidden sm:inline">Invite Member</span>
-          </button>
+          </Button>
         )}
       </div>
 
@@ -472,11 +470,12 @@ function MembersView() {
                     <h4 className="text-white font-medium">
                       {member.user.name}
                     </h4>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${member.role === "owner" ? "bg-accent/10 text-accent border-accent/20" : "bg-white/5 text-gray-400 border-white/10"}`}
+                    <Badge
+                      variant={member.role === "owner" ? "accent" : "default"}
+                      className="text-[10px]"
                     >
                       {member.role}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="text-sm text-gray-500">{member.user.email}</p>
                 </div>
@@ -558,16 +557,16 @@ function MembersView() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <span className="px-2.5 py-1 rounded-full bg-yellow-500/10 text-yellow-500 text-xs font-medium border border-yellow-500/20">
+                <Badge variant="warning">
                   Pending
-                </span>
+                </Badge>
                 {canCancelInvitation && (
-                  <button
+                  <IconButton
                     onClick={() => cancelInvitation(invitation.id)}
-                    className="p-2 text-gray-500 hover:text-red-500 transition-colors"
-                  >
-                    <X size={18} />
-                  </button>
+                    icon={<X size={18} />}
+                    variant="ghost"
+                    aria-label="Cancel invitation"
+                  />
                 )}
               </div>
             </div>

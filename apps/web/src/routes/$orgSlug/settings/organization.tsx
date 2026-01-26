@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useFeatureFlag } from "@/lib/feature-flags";
+import { Card, CardHeader, CardContent, Input, Label } from "@/components/ui";
 
 export const Route = createFileRoute("/$orgSlug/settings/organization")({
   head: () => ({
@@ -81,73 +82,47 @@ function OrganizationSettingsView() {
   return (
     <div className="space-y-6">
       {/* Organization */}
-      <div className="bg-white/2 border border-white/5 rounded-2xl overflow-hidden">
-        <div className="p-6 border-b border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-500/10 rounded-lg">
-              <Building2 className="w-5 h-5 text-green-400" />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-white">Organization</h3>
-              <p className="text-sm text-gray-500">
-                Manage your organization settings
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="p-6 space-y-6">
+      <Card>
+        <CardHeader
+          icon={<Building2 className="w-5 h-5 text-green-400" />}
+          iconBg="bg-green-500/10"
+          title="Organization"
+          description="Manage your organization settings"
+        />
+        <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Organization Name
-              </label>
-              <div className="relative">
-                <Type className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input
-                  type="text"
-                  value={currentOrg.name}
-                  readOnly
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-white/20 transition-colors cursor-not-allowed opacity-75"
-                />
-              </div>
+              <Label>Organization Name</Label>
+              <Input
+                value={currentOrg.name}
+                readOnly
+                leftIcon={<Type className="w-4 h-4" />}
+                className="cursor-not-allowed opacity-75"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Organization Slug
-              </label>
-              <div className="relative">
-                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input
-                  type="text"
-                  value={currentOrg.slug}
-                  readOnly
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-white/20 transition-colors cursor-not-allowed opacity-75"
-                />
-              </div>
+              <Label>Organization Slug</Label>
+              <Input
+                value={currentOrg.slug}
+                readOnly
+                leftIcon={<Hash className="w-4 h-4" />}
+                className="cursor-not-allowed opacity-75"
+              />
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Request Capture Settings */}
       {isFullCaptureFeatureEnabled && (
-        <div className="bg-white/2 border border-white/5 rounded-2xl overflow-hidden">
-          <div className="p-6 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <Database className="w-5 h-5 text-blue-400" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-white">
-                  Request Capture
-                </h3>
-                <p className="text-sm text-gray-500">
-                  Configure request and response data capture
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="p-6">
+        <Card>
+          <CardHeader
+            icon={<Database className="w-5 h-5 text-blue-400" />}
+            iconBg="bg-blue-500/10"
+            title="Request Capture"
+            description="Configure request and response data capture"
+          />
+          <CardContent>
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -194,8 +169,8 @@ function OrganizationSettingsView() {
                 )}
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

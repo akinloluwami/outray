@@ -11,6 +11,7 @@ import { authClient, usePermission } from "@/lib/auth-client";
 import { useState } from "react";
 import { AlertModal } from "@/components/alert-modal";
 import { appClient } from "@/lib/app-client";
+import { Button } from "@/components/ui";
 
 export const Route = createFileRoute("/$orgSlug/billing")({
   head: () => ({
@@ -390,19 +391,19 @@ function PlanCard({
         ))}
       </div>
 
-      <button
+      <Button
         onClick={onSelect}
         disabled={current}
-        className={`w-full py-3 rounded-full font-bold text-center transition-all ${
+        className={`w-full py-3 rounded-full ${
           current
-            ? "bg-white/10 text-gray-400 cursor-not-allowed"
+            ? "bg-white/10 text-gray-400"
             : recommended
               ? "bg-gradient-to-r from-accent to-yellow-400 text-black hover:opacity-90 shadow-lg shadow-accent/20"
               : "bg-white/10 text-white hover:bg-white/20"
         }`}
       >
         {current ? "Current Plan" : "Upgrade"}
-      </button>
+      </Button>
     </div>
   );
 }

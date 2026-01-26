@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { appClient } from "@/lib/app-client";
 import type { TunnelEvent } from "./types";
 import { formatBytes } from "./utils";
+import { Button } from "@/components/ui";
 
 interface FullCaptureDisabledContentProps {
   request: TunnelEvent;
@@ -72,21 +73,22 @@ export function FullCaptureDisabledContent({
                   </p>
                 </div>
                 <div className="flex gap-3 justify-end">
-                  <button
+                  <Button
                     onClick={() => setShowConfirmation(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                    variant="ghost"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => enableFullCaptureMutation.mutate()}
                     disabled={enableFullCaptureMutation.isPending}
-                    className="px-4 py-2 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                    isLoading={enableFullCaptureMutation.isPending}
+                    variant="accent"
                   >
                     {enableFullCaptureMutation.isPending
                       ? "Enabling..."
                       : "Enable Full Capture"}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             </motion.div>
@@ -108,12 +110,13 @@ export function FullCaptureDisabledContent({
               Only basic request metadata is available. Enable full capture to
               inspect headers, body, and replay requests.
             </p>
-            <button
+            <Button
               onClick={() => setShowConfirmation(true)}
-              className="px-4 py-1.5 bg-accent hover:bg-accent/90 text-white text-sm font-medium rounded-lg transition-colors"
+              variant="accent"
+              size="sm"
             >
               Enable full capture
-            </button>
+            </Button>
           </div>
         </div>
       </div>

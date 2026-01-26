@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/shared";
-import { ArrowRight, CheckCircle2, Loader2, Copy, Check, Mail, Handshake, Shield, MessageCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, Copy, Check, Mail, Handshake, Shield, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -172,23 +173,15 @@ function ContactPage() {
                   <p className="text-red-400 text-sm">{error}</p>
                 )}
 
-                <button
+                <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  isLoading={isSubmitting}
+                  rightIcon={!isSubmitting ? <ArrowRight size={18} /> : undefined}
+                  className="w-full md:w-auto px-8 rounded-full"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 size={18} className="animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <ArrowRight size={18} />
-                    </>
-                  )}
-                </button>
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </Button>
               </form>
             )}
           </div>
