@@ -3,6 +3,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { redis } from "./lib/redis";
 import { pool, execute } from "./lib/tigerdata";
+import { chargePaystackSubscriptions } from "./lib/paystack";
 
 async function connectRedis() {
   await redis.connect();
@@ -223,6 +224,10 @@ async function start() {
 
   // Rebuild global index every hour to ensure consistency
   setInterval(rebuildGlobalOrgIndex, 60 * 60_000);
+
+  // Charge due Paystack subscriptions daily at midnight (run immediately on startup too)
+  await chargePaystackSubscriptions();
+  setInterval(chargePaystackSubscriptions, 24 * 60 * 60_000); // Every 24 hours
 }
 
 start();
