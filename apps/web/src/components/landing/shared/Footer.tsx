@@ -72,6 +72,11 @@ export const Footer = () => {
                   Next.js
                 </Link>
               </li>
+              <li>
+                <Link to="/express" className="hover:text-white transition-colors">
+                  Express
+                </Link>
+              </li>
             </ul>
           </div>
 
