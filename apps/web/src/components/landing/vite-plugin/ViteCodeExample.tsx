@@ -90,7 +90,7 @@ export const ViteCodeExample = () => {
                 <p className="text-white/50">
                   <span className="text-green-400">➜</span>{" "}
                   <span className="font-bold">Tunnel:</span>{"  "}
-                  <span className="text-accent">https://abc123.outray.dev</span>
+                  <span className="text-accent">https://abc123.outray.app</span>
                 </p>
               </div>
             </div>
