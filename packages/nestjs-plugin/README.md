@@ -1,15 +1,15 @@
-# @outray/nestjs
+# @outray/nest
 
 NestJS integration for [Outray](https://outray.dev), the open-source tunneling solution. Automatically expose your local NestJS server to the internet during development.
 
 ## Installation
 
 ```bash
-npm install @outray/nestjs
+npm install @outray/nest
 # or
-pnpm add @outray/nestjs
+pnpm add @outray/nest
 # or
-yarn add @outray/nestjs
+yarn add @outray/nest
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ Import the `outray` function and call it in your `main.ts` file after your appli
 ```typescript
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
