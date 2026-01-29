@@ -4,20 +4,20 @@ description: Automatically expose your NestJS dev server via OutRay tunnel
 icon: SiNestjs
 ---
 
-The `@outray/nestjs` plugin automatically creates an OutRay tunnel when your NestJS application starts, giving you a public URL to share your local development environment.
+The `@outray/nest` plugin automatically creates an OutRay tunnel when your NestJS application starts, giving you a public URL to share your local development environment.
 
 ## Installation
 
 ```bash
-npm install @outray/nestjs
+npm install @outray/nest
 ```
 
 ```bash
-pnpm add @outray/nestjs
+pnpm add @outray/nest
 ```
 
 ```bash
-yarn add @outray/nestjs
+yarn add @outray/nest
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ Add the plugin to your NestJS application's `main.ts`:
 // main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -58,7 +58,7 @@ The plugin accepts an options object to customize its behavior:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -108,7 +108,7 @@ Reserve a consistent subdomain for your API:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -129,7 +129,7 @@ Use your own domain for the tunnel:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -150,7 +150,7 @@ Only enable the tunnel in certain environments:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -170,7 +170,7 @@ React to tunnel events in your application:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -199,7 +199,7 @@ Disable all tunnel logs:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -222,7 +222,7 @@ If automatic port detection doesn't work, you can specify the port explicitly:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -243,7 +243,7 @@ Perfect for exposing your GraphQL API for testing:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -266,7 +266,7 @@ Perfect for testing webhooks from external services:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray } from '@outray/nestjs';
+import { outray } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -289,7 +289,7 @@ The plugin includes full TypeScript definitions:
 ```ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { outray, OutrayPluginOptions } from '@outray/nestjs';
+import { outray, OutrayPluginOptions } from '@outray/nest';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
