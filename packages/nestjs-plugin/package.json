@@ -1,5 +1,5 @@
 {
-    "name": "@outray/nestjs",
+    "name": "@outray/nest",
     "version": "0.0.1",
     "description": "NestJS plugin to automatically expose your dev server via Outray tunnel",
     "main": "dist/index.js",
