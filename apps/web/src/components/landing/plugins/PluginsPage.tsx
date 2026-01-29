@@ -62,7 +62,7 @@ const plugins = [
     iconColor: "text-[#E0234E]",
     bgGradient: "from-[#E0234E]/20 to-[#E0234E]/5",
     href: "/nestjs",
-    npm: "@outray/nestjs",
+    npm: "@outray/nest",
     features: [
       "Auto port detection",
       "NestJS 8-11 support",
