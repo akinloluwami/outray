@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CreditCard, Building2, Calendar, DollarSign, TrendingUp } from "lucide-react";
@@ -35,11 +35,13 @@ const planColors: Record<string, string> = {
   ray: "bg-blue-500/10 text-blue-400 border-blue-500/20",
   beam: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   pulse: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  unlimited: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 };
 
 const statusColors: Record<string, string> = {
   active: "bg-green-500/10 text-green-400 border-green-500/20",
   cancelled: "bg-red-500/10 text-red-400 border-red-500/20",
+  canceled: "bg-red-500/10 text-red-400 border-red-500/20",
   past_due: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
   paused: "bg-gray-500/10 text-gray-400 border-gray-500/20",
 };
@@ -82,15 +84,19 @@ function AdminSubscriptionsPage() {
       key: "orgName",
       header: "Organization",
       render: (sub) => (
-        <div className="flex items-center gap-3">
+        <Link
+          to="/admin/organizations/$slug"
+          params={{ slug: sub.orgSlug || "" }}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
             <Building2 size={14} className="text-gray-400" />
           </div>
           <div>
-            <div className="font-medium text-white">{sub.orgName || "Unknown"}</div>
+            <div className="font-medium text-white hover:text-accent">{sub.orgName || "Unknown"}</div>
             <div className="text-xs text-gray-500">/{sub.orgSlug || "-"}</div>
           </div>
-        </div>
+        </Link>
       ),
     },
     {
@@ -185,7 +191,7 @@ function AdminSubscriptionsPage() {
           {total.toLocaleString()} total subscriptions
         </div>
         <div className="flex gap-2">
-          {["", "free", "ray", "beam", "pulse"].map((plan) => (
+          {["", "free", "ray", "beam", "pulse", "unlimited"].map((plan) => (
             <button
               key={plan}
               onClick={() => {
